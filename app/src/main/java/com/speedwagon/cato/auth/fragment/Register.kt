@@ -12,15 +12,18 @@ import com.google.android.material.textfield.TextInputEditText
 import com.speedwagon.cato.R
 
 class Register : Fragment() {
+    private lateinit var userUsername : TextInputEditText
+    private lateinit var userPhone : TextInputEditText
+    private lateinit var userPassword : TextInputEditText
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-        val userUsername = view.findViewById<TextInputEditText>(R.id.et_register_username_value).editableText.toString()
-        val userPhone = view.findViewById<TextInputEditText>(R.id.et_register_phone_value).editableText.toString()
-        val userPassword = view.findViewById<TextInputEditText>(R.id.et_register_password_value).editableText.toString()
+        userUsername = view.findViewById(R.id.et_register_username_value)
+        userPhone = view.findViewById(R.id.et_register_phone_value)
+        userPassword = view.findViewById(R.id.et_register_password_value)
 
         val registerButton = view.findViewById<Button>(R.id.btn_register)
         val loginRedirect = view.findViewById<TextView>(R.id.tv_login_redirectToLogin)
@@ -34,14 +37,25 @@ class Register : Fragment() {
             fragmentTransaction.commit()
         }
 
-        registerButton.setOnClickListener { registerUser(userUsername, userPhone, userPassword) }
+        registerButton.setOnClickListener { registerUser() }
 
         return view
     }
 
-    private fun registerUser(username: String, phoneNumber: String, password: String){
+    private fun registerUser(){
+        val username = userUsername.editableText.toString()
+        val phoneNumber = userPhone.editableText.toString()
+        val password = userPassword.editableText.toString()
+
         if (username.isEmpty() || phoneNumber.isEmpty() || password.isEmpty()){
             Toast.makeText(context, "Seperti nya ada yang belum kamu isih deh, coba cek lagi ya!", Toast.LENGTH_SHORT).show()
+            if (username.isEmpty()){
+                userUsername.requestFocus()
+            } else if (phoneNumber.isEmpty()){
+                userPhone.requestFocus()
+            } else {
+                userPassword.requestFocus()
+            }
         } else {
             Toast.makeText(context, "Telah terdaftar", Toast.LENGTH_SHORT).show()
         }
