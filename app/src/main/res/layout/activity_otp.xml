@@ -48,7 +48,9 @@
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,7 +65,9 @@
                 android:id="@+id/et_otp_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName"
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1"
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -80,7 +84,9 @@
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +102,9 @@
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,7 +120,9 @@
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,7 +138,9 @@
                 android:layout_width="match_parent"
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:gravity="center"
+                android:maxLength="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
