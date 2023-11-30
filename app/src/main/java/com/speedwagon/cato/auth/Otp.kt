@@ -147,8 +147,6 @@ class Otp : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
-
-
     }
 
     private fun verification(){
