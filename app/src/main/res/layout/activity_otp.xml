@@ -19,6 +19,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
         app:layout_constraintVertical_chainStyle="packed"
         tools:ignore="HardcodedText" />
 
@@ -38,8 +39,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_otp_1_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginEnd="5dp"
             tools:ignore="HardcodedText">
 
@@ -49,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
+                android:textSize="35sp"
                 android:gravity="center"
                 android:maxLength="1"/>
 
@@ -56,8 +58,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_otp_2_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginEnd="5dp"
             tools:ignore="HardcodedText">
 
@@ -65,6 +67,7 @@
                 android:id="@+id/et_otp_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textSize="35sp"
                 android:inputType="number"
                 android:gravity="center"
                 android:maxLength="1"
@@ -74,8 +77,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_otp_3_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginEnd="5dp"
             tools:ignore="HardcodedText">
 
@@ -83,6 +86,7 @@
                 android:id="@+id/et_otp_3"
                 tools:ignore="SpeakableTextPresentCheck"
                 android:layout_width="match_parent"
+                android:textSize="35sp"
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:gravity="center"
@@ -92,14 +96,15 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_otp_4_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginEnd="5dp"
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_otp_4"
                 tools:ignore="SpeakableTextPresentCheck"
+                android:textSize="35sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
@@ -108,48 +113,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_otp_5_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="5dp"
-            tools:ignore="HardcodedText">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_otp_5"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                android:gravity="center"
-                android:maxLength="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_otp_6_container"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="5dp"
-            tools:ignore="HardcodedText">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_otp_6"
-                android:layout_width="match_parent"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                android:gravity="center"
-                android:maxLength="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="64dp"
         android:text="Kirim ulang kode OTP"
         app:layout_constraintBottom_toTopOf="@+id/tv_otp_time"
         app:layout_constraintEnd_toEndOf="parent"
