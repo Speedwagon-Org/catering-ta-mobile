@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CaTo</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_daftar">DAFTAR</string>
+    <string name="text_masuk">MASUK</string>
+    <string name="default_time">00:00</string>
 </resources>
