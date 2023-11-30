@@ -4,4 +4,12 @@
     <string name="text_daftar">DAFTAR</string>
     <string name="text_masuk">MASUK</string>
     <string name="default_time">00:00</string>
+    <string name="first_bottom_menu">Beranda</string>
+    <string name="second_bottom_menu">Cari</string>
+    <string name="third_bottom_menu">Pesanan</string>
+    <string name="fourth_bottom_menu">Profile</string>
+    <string name="menu_pesanan">Pesanan</string>
+    <string name="menu_profil">Profil</string>
+    <string name="menu_beranda">Beranda</string>
+    <string name="menu_cari">Cari</string>
 </resources>
