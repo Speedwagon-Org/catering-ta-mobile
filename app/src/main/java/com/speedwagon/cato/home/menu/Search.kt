@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import com.speedwagon.cato.R
 
 
-class Pesanan : Fragment() {
+class Search : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_pesanan, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
         return view
     }
 

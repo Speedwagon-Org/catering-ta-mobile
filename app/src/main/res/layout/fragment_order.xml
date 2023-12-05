@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.menu.Beranda">
+    tools:context=".home.menu.Home">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/menu_profil" />
+        android:text="@string/menu_pesanan" />
 
 </FrameLayout>

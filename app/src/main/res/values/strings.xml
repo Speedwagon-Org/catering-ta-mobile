@@ -12,4 +12,10 @@
     <string name="menu_profil">Profil</string>
     <string name="menu_beranda">Beranda</string>
     <string name="menu_cari">Cari</string>
+    <string name="nama_vendor">Nama Vendor</string>
+    <string name="status_pesanan">Status</string>
+    <string name="nama_makanan">Nama Makanan</string>
+    <string name="jenis_makanan">Jenis Makanan</string>
+    <string name="jarak">Jarak</string>
+    <string name="price_mock">Rp. 43.000</string>
 </resources>

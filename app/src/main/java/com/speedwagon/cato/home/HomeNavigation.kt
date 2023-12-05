@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.speedwagon.cato.R
-import com.speedwagon.cato.home.menu.Beranda
-import com.speedwagon.cato.home.menu.Cari
-import com.speedwagon.cato.home.menu.Pesanan
-import com.speedwagon.cato.home.menu.Profil
+import com.speedwagon.cato.home.menu.Home
+import com.speedwagon.cato.home.menu.Order
+import com.speedwagon.cato.home.menu.Profile
+import com.speedwagon.cato.home.menu.Search
 
 class HomeNavigation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,35 +17,35 @@ class HomeNavigation : AppCompatActivity() {
         val bottomNavigationViewHome: BottomNavigationView = findViewById(R.id.bnv_home)
         bottomNavigationViewHome.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.menu_beranda -> {
+                R.id.menu_home -> {
                     val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-                    val berandaFragment = Beranda()
+                    val homeFragment = Home()
                     fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.replace(R.id.fcv_home, berandaFragment)
+                    fragmentTransaction.replace(R.id.fcv_home, homeFragment)
                     fragmentTransaction.commit()
                     true
                 }
-                R.id.menu_cari -> {
+                R.id.menu_search -> {
                     val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-                    val cariFragment = Cari()
+                    val searchFragment = Search()
                     fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.replace(R.id.fcv_home, cariFragment)
+                    fragmentTransaction.replace(R.id.fcv_home, searchFragment)
                     fragmentTransaction.commit()
                     true
                 }
-                R.id.menu_pesanan -> {
+                R.id.menu_order -> {
                     val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-                    val pesananFragment = Pesanan()
+                    val orderFragment = Order()
                     fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.replace(R.id.fcv_home, pesananFragment)
+                    fragmentTransaction.replace(R.id.fcv_home, orderFragment)
                     fragmentTransaction.commit()
                     true
                 }
                 R.id.menu_profile -> {
                     val fragmentTransaction = this.supportFragmentManager.beginTransaction()
-                    val profilFragment = Profil()
+                    val profileFragment = Profile()
                     fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.replace(R.id.fcv_home, profilFragment)
+                    fragmentTransaction.replace(R.id.fcv_home, profileFragment)
                     fragmentTransaction.commit()
                     true
                 }
