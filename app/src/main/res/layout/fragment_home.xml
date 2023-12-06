@@ -107,13 +107,18 @@
             android:text="Pesanan yang sedang berjalan..."
             tools:ignore="HardcodedText" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home_on_process"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_on_process"/>
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home_on_process"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_on_process"/>
+        </ScrollView>
+
     </LinearLayout>
 
     <LinearLayout
@@ -152,7 +157,7 @@
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/tv_home_newly_opened_heading"
+            android:id="@+id/tv_home_newly_open_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -162,7 +167,7 @@
             tools:ignore="HardcodedText" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home_newly_opened"
+            android:id="@+id/rv_home_newly_open"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
