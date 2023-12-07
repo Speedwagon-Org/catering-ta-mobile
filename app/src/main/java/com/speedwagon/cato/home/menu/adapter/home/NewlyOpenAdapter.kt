@@ -20,6 +20,7 @@ class NewlyOpenAdapter (private val context: Context, private val itemList: List
         val vendorImageView: ImageView = itemView.findViewById(R.id.iv_item_newly_open_image)
         val vendorNameTextView: TextView = itemView.findViewById(R.id.tv_newly_open_vendor)
         val vendorDistanceTextView: TextView = itemView.findViewById(R.id.tv_newly_open_distance)
+        val vendorFoodTypeTextView: TextView = itemView.findViewById(R.id.tv_newly_opened_food_type)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_newly_open, parent, false)
@@ -32,6 +33,7 @@ class NewlyOpenAdapter (private val context: Context, private val itemList: List
 
         holder.vendorNameTextView.text = currentItem.vendorName
         holder.vendorDistanceTextView.text = currentItem.vendorDistance.toString() + " km"
+        holder.vendorFoodTypeTextView.text = currentItem.vendorFoodType
 
         Glide.with(context)
             .load(currentItem.vendorImgUrl)
