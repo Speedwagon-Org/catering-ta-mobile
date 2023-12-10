@@ -1,4 +1,4 @@
-package com.speedwagon.cato.home.menu.adapter.home
+package com.speedwagon.cato.home.menu.adapter.order
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,17 +12,17 @@ import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.home.item.OnProcessItem
 
-class OnProcessAdapter(private val context: Context, private val itemList: List<OnProcessItem>) :
-    RecyclerView.Adapter<OnProcessAdapter.ViewHolder>() {
+class OrderHistoryAdapter (private val context: Context, private val itemList: List<OnProcessItem>) :
+    RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cardViewContainer: CardView = itemView.findViewById(R.id.cv_item_on_process_container)
-        val foodImageView: ImageView = itemView.findViewById(R.id.iv_item_on_process_image)
-        val foodNameTextView: TextView = itemView.findViewById(R.id.tv_item_on_process_food)
-        val vendorNameTextView: TextView = itemView.findViewById(R.id.tv_item_on_process_vendor)
-        val foodStatusTextView: TextView = itemView.findViewById(R.id.tv_item_on_process_status)
+        val cardViewContainer: CardView = itemView.findViewById(R.id.cv_item_order_history_container)
+        val foodImageView: ImageView = itemView.findViewById(R.id.iv_item_order_history_image)
+        val foodNameTextView: TextView = itemView.findViewById(R.id.tv_item_order_history_food)
+        val vendorNameTextView: TextView = itemView.findViewById(R.id.tv_item_order_history_vendor)
+        val foodStatusTextView: TextView = itemView.findViewById(R.id.tv_item_order_history_status)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_on_process, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_order_history, parent, false)
         return ViewHolder(view)
     }
 
