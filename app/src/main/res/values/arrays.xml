@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="search_filter">
+        <item>Terjauh</item>
+        <item>Terlaris</item>
+        <item>Termurah</item>
+        <item>Ulasan Terbanyak</item>
+        <item>Rating Tertinggi</item>
+    </array>
+
+    <array name="badge_filter">
+        <item>Terjamin Enak</item>
+        <item>Vendor Baru</item>
+        <item>Vendor Super</item>
+    </array>
+</resources>

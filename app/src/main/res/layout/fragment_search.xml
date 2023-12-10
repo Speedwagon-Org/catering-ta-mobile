@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.menu.Home">
+    tools:context=".home.menu.Home"
+    android:orientation="vertical"
+    android:background="#EEEEEE">
+    <SearchView
+        android:id="@+id/sv_search_vendor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_white_background" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp">
+        <Spinner
+            android:id="@+id/sp_search_filter"
+            android:paddingHorizontal="16dp"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_spinner_background"
+            />
+        <Spinner
+            android:id="@+id/sp_search_badge"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/rounded_spinner_background"
+            />
+    </LinearLayout>
+
+
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:text="Hasil Pencarian : "
+        android:textStyle="bold"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="?android:attr/listDivider" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_vendor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/menu_cari" />
+        tools:listitem="@layout/item_vendor_search"
+        android:paddingTop="16dp"/>
 
-</FrameLayout>
+</LinearLayout>
