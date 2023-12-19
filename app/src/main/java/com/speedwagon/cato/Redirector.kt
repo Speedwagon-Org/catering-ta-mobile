@@ -6,6 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.speedwagon.cato.auth.Authentication
 import com.speedwagon.cato.auth.Otp
+import com.speedwagon.cato.home.HomeNavigation
 
 class Redirector : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +24,13 @@ class Redirector : AppCompatActivity() {
         val btnRedirectorOtp : Button = findViewById(R.id.btn_redirect_otp)
         btnRedirectorOtp.setOnClickListener {
             val intent = Intent(this, Otp::class.java)
+            startActivity(intent)
+        }
+
+        // Start OTP Activity
+        val btnRedirectorHomeNavigation : Button = findViewById(R.id.btn_redirect_home)
+        btnRedirectorHomeNavigation.setOnClickListener {
+            val intent = Intent(this, HomeNavigation::class.java)
             startActivity(intent)
         }
     }

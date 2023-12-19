@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="search_filter">
+        <item>Terjauh</item>
+        <item>Terlaris</item>
+        <item>Termurah</item>
+        <item>Ulasan Terbanyak</item>
+        <item>Rating Tertinggi</item>
+    </array>
+
+    <array name="badge_filter">
+        <item>Semua</item>
+        <item>Terjamin Enak</item>
+        <item>Baru</item>
+        <item>Super</item>
+        <item>Official</item>
+    </array>
+
+    <array name="status_filter">
+        <item>Semua</item>
+        <item>Dalam Perjalanan</item>
+        <item>Sedang Dipersiapkan</item>
+        <item>Pesanan Selesai</item>
+        <item>Pesanan Gagal</item>
+    </array>
+</resources>

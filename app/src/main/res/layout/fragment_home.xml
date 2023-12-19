@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.menu.Home">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#EEEEEE">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginBottom="16dp">
+
+            <SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/rounded_white_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <ImageView
+                android:id="@+id/iv_beranda_top_background"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:contentDescription="Top Background"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="HardcodedText"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/tv_beranda_welcome_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selamat Siang"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tv_beranda_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Pengguna"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tv_beranda_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lokasi"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_home_on_process_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Pesanan yang sedang berjalan..."
+                tools:ignore="HardcodedText" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedScrolling">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_on_process"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_on_process"/>
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_home_most_popular_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Makanan populer sekitar kamu..."
+                tools:ignore="HardcodedText" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedScrolling">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_popular_food"/>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_home_newly_open_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Restoran baru buka disekitar mu..."
+                tools:ignore="HardcodedText" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedScrolling">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_newly_open"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_newly_open"/>
+            </ScrollView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

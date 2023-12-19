@@ -4,4 +4,22 @@
     <string name="text_daftar">DAFTAR</string>
     <string name="text_masuk">MASUK</string>
     <string name="default_time">00:00</string>
+    <string name="first_bottom_menu">Beranda</string>
+    <string name="second_bottom_menu">Cari</string>
+    <string name="third_bottom_menu">Pesanan</string>
+    <string name="fourth_bottom_menu">Profile</string>
+    <string name="menu_pesanan">Pesanan</string>
+    <string name="menu_profil">Profil</string>
+    <string name="menu_beranda">Beranda</string>
+    <string name="menu_cari">Cari</string>
+    <string name="nama_vendor">Nama Vendor</string>
+    <string name="status_pesanan">Status</string>
+    <string name="nama_makanan">Nama Makanan</string>
+    <string name="jenis_makanan">Jenis Makanan</string>
+    <string name="jarak">Jarak</string>
+    <string name="price_mock">Rp. 43.000</string>
+    <string name="name_user">Nama Pengguna</string>
+    <string name="email_user">example@mail.com</string>
+    <string name="phone_user">08xxx</string>
+    <string name="user_location">Lokasi</string>
 </resources>

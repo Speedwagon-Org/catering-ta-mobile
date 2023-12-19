@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CaTo"
         tools:targetApi="31">
         <activity
+            android:name=".home.HomeNavigation"
+            android:exported="false" />
+        <activity
             android:name=".auth.Otp"
             android:exported="false" />
         <activity
