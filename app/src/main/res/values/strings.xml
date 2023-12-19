@@ -18,4 +18,8 @@
     <string name="jenis_makanan">Jenis Makanan</string>
     <string name="jarak">Jarak</string>
     <string name="price_mock">Rp. 43.000</string>
+    <string name="name_user">Nama Pengguna</string>
+    <string name="email_user">example@mail.com</string>
+    <string name="phone_user">08xxx</string>
+    <string name="user_location">Lokasi</string>
 </resources>

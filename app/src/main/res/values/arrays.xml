@@ -11,8 +11,9 @@
     <array name="badge_filter">
         <item>Semua</item>
         <item>Terjamin Enak</item>
-        <item>Vendor Baru</item>
-        <item>Vendor Super</item>
+        <item>Baru</item>
+        <item>Super</item>
+        <item>Official</item>
     </array>
 
     <array name="status_filter">
