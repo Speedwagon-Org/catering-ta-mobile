@@ -22,4 +22,8 @@
     <string name="email_user">example@mail.com</string>
     <string name="phone_user">08xxx</string>
     <string name="user_location">Lokasi</string>
+    <string name="food_type">Tipe Makanan</string>
+    <string name="food_rate">4.6</string>
+    <string name="promo_code">Kode-kode promo</string>
+    <string name="order_type">Pesan Antar, Langganan, Ambil Sendiri</string>
 </resources>
