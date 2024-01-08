@@ -26,4 +26,5 @@
     <string name="food_rate">4.6</string>
     <string name="promo_code">Kode-kode promo</string>
     <string name="order_type">Pesan Antar, Langganan, Ambil Sendiri</string>
+    <string name="food_name">Fried Rice</string>
 </resources>

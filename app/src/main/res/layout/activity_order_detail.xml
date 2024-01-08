@@ -47,7 +47,7 @@
                         tools:ignore="HardcodedText" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/tv_order_detail_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur ipsum luctus sem euismod, eget euismod lectus condimentum. Morbi sed ornare tellus, sit amet cursus quam"
@@ -56,7 +56,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_order_detail_edit_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_edit"
@@ -64,7 +64,7 @@
             </LinearLayout>
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/sp_order_detail_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
@@ -80,13 +80,19 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:text="List Makanan"
                 tools:ignore="HardcodedText" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tv_order_detail_foods"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp"
+                tools:listitem="@layout/item_order_food"/>
         </LinearLayout>
     </ScrollView>
 
@@ -96,6 +102,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,7 +128,7 @@
                     android:text="Total"
                     tools:ignore="HardcodedText" />
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/tv_order_detail_total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="8dp"
@@ -133,7 +140,7 @@
 
 
             <Spinner
-                android:id="@+id/spinner2"
+                android:id="@+id/sp_order_detail_payment"
                 android:layout_width="match_parent"
                 android:minHeight="54dp"
                 android:layout_height="wrap_content"
@@ -142,7 +149,7 @@
 
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_order_detail_continue_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

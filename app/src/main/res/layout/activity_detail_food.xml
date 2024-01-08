@@ -66,13 +66,14 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
-            android:hint="1"
+            android:hint="qty"
             android:paddingVertical="8dp"
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_detail_food_qty"
                 android:textAlignment="center"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />

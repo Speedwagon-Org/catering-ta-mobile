@@ -8,6 +8,7 @@ import com.speedwagon.cato.auth.Authentication
 import com.speedwagon.cato.auth.Otp
 import com.speedwagon.cato.home.HomeNavigation
 import com.speedwagon.cato.order.OrderDetail
+import com.speedwagon.cato.order.OrderStatus
 import com.speedwagon.cato.vendor.foods.DetailFood
 
 class Redirector : AppCompatActivity() {
@@ -45,6 +46,12 @@ class Redirector : AppCompatActivity() {
         val btnRedirectorVendorDetail : Button = findViewById(R.id.btn_redirect_vendor_detail)
         btnRedirectorVendorDetail.setOnClickListener {
             val intent = Intent(this, DetailFood::class.java)
+            startActivity(intent)
+        }
+        // Start Detail Vendor Activity
+        val btnRedirectorOrderStatus : Button = findViewById(R.id.btn_redirect_order_status)
+        btnRedirectorOrderStatus.setOnClickListener {
+            val intent = Intent(this, OrderStatus::class.java)
             startActivity(intent)
         }
     }
