@@ -7,10 +7,11 @@
     android:orientation="vertical"
     tools:context=".order.OrderDetail">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="100dp"
+        android:layout_height="match_parent"
+        android:paddingBottom="150dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,81 +21,86 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="12dp">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingEnd="8dp"
+                tools:ignore="RtlSymmetry">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="8dp"
-                    tools:ignore="RtlSymmetry">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Alamat"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/tv_order_detail_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur ipsum luctus sem euismod, eget euismod lectus condimentum. Morbi sed ornare tellus, sit amet cursus quam"
-                        tools:ignore="HardcodedText" />
-                </LinearLayout>
-
-
-                <ImageView
-                    android:id="@+id/iv_order_detail_edit_location"
+                <TextView
+                    android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
-                    tools:ignore="ContentDescription" />
+                    android:text="Alamat"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tv_order_detail_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur ipsum luctus sem euismod, eget euismod lectus condimentum. Morbi sed ornare tellus, sit amet cursus quam"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
-            <Spinner
-                android:id="@+id/sp_order_detail_type"
-                android:layout_width="match_parent"
+
+            <ImageView
+                android:id="@+id/iv_order_detail_edit_location"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:padding="12dp" />
-
-            <View
-                android:id="@+id/divider4"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="List Makanan"
-                tools:ignore="HardcodedText" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tv_order_detail_foods"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="16dp"
-                tools:listitem="@layout/item_order_food"/>
+                android:background="@drawable/rounded_white_background"
+                android:src="@drawable/ic_edit"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_marginHorizontal="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipe Pesanan"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <Spinner
+            android:id="@+id/sp_order_detail_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="12dp" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="List Makanan"
+            tools:ignore="HardcodedText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_order_detail_foods"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            tools:listitem="@layout/item_order_food"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
