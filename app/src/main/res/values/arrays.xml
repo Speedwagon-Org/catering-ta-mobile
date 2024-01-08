@@ -23,4 +23,13 @@
         <item>Pesanan Selesai</item>
         <item>Pesanan Gagal</item>
     </array>
+
+    <array name="payment_method">
+        <item>Qris</item>
+    </array>
+
+    <array name="order_type">
+        <item>Pesan Antar</item>
+        <item>Langganan</item>
+    </array>
 </resources>
