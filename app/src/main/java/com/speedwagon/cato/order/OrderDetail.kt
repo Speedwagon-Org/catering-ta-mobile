@@ -33,66 +33,6 @@ class OrderDetail : AppCompatActivity() {
                 foodPrice=38000,
                 foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
                 foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
-            ),
-            OrderedFood(
-                foodName="Food 2",
-                foodPrice=38000,
-                foodPictUrl="https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodQty = 5
             )
         )
         rvOrderFood.adapter = OrderFoodAdapter(this, dummyDataOrderFood)

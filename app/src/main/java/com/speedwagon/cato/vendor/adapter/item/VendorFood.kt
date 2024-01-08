@@ -1,6 +1,6 @@
 package com.speedwagon.cato.vendor.adapter.item
 
-data class AddFoods(
+data class VendorFood(
     var foodId : String,
     var foodPrice : Int,
     var foodName : String,

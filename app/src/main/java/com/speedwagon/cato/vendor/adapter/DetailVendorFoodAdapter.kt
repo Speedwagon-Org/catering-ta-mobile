@@ -11,10 +11,10 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
-import com.speedwagon.cato.vendor.adapter.item.AddFoods
+import com.speedwagon.cato.vendor.adapter.item.VendorFood
 
-class AddFoodAdapter (private val context: Context, private val itemList: List<AddFoods>):
-    RecyclerView.Adapter<AddFoodAdapter.ViewHolder>() {
+class DetailVendorFoodAdapter (private val context: Context, private val itemList: List<VendorFood>):
+    RecyclerView.Adapter<DetailVendorFoodAdapter.ViewHolder>() {
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val cardViewContainer : CardView = itemView.findViewById(R.id.cv_item_add_container)
             val foodImageView : ImageView = itemView.findViewById(R.id.iv_item_add_image)
@@ -33,29 +33,37 @@ class AddFoodAdapter (private val context: Context, private val itemList: List<A
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val currentItem = itemList[position]
+            if (currentItem.foodQty > 0){
+                holder.foodBtnSub.visibility = View.VISIBLE
+                holder.foodQtyTextView.visibility = View.VISIBLE
+            } else {
+                holder.foodBtnSub.visibility = View.GONE
+                holder.foodQtyTextView.visibility = View.GONE
+            }
             holder.foodNameTextView.text = currentItem.foodName
             holder.foodQtyTextView.text = currentItem.foodQty.toString()
-            holder.foodPriceTextView.text = (currentItem.foodDiscount * ((100 - currentItem.foodDiscount)/100)).toString()
+            holder.foodPriceTextView.text = "Rp " + (currentItem.foodPrice * ((100F - currentItem.foodDiscount)/100F)).toInt().toString()
             Glide.with(context)
                 .load(currentItem.foodImgUrl)
                 .into(holder.foodImageView)
 
-            if (currentItem.foodQty > 0){
-                holder.foodBtnSub.visibility = View.VISIBLE
-                holder.foodQtyTextView.visibility = View.VISIBLE
-            }
 
 
             if (currentItem.foodDiscount > 0){
                 holder.foodDiscountTextView.visibility = View.VISIBLE
-                holder.foodDiscountTextView.text = currentItem.foodDiscount.toString() + "%"
+                holder.foodDiscountTextView.text = "Discount " + currentItem.foodDiscount.toString() + "%"
             }
 
             holder.foodBtnAdd.setOnClickListener {
                 currentItem.foodQty++
+                notifyItemChanged(position)
             }
+
             holder.foodBtnSub.setOnClickListener {
-                currentItem.foodQty--
+                if (currentItem.foodQty > 0) {
+                    currentItem.foodQty--
+                    notifyItemChanged(position)
+                }
             }
 
             holder.cardViewContainer.setOnClickListener {

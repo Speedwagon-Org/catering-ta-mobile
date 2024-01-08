@@ -85,12 +85,12 @@
             tools:ignore="ContentDescription" />
         <TextView
             android:id="@+id/tv_item_add_food_qty"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:textSize="24sp"
             android:textAlignment="center"
             android:text="0"
-            android:visibility="gone"
 
             tools:ignore="HardcodedText" />
         <ImageView
