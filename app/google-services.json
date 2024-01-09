@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538217432287",
+    "project_id": "ta-catering-online",
+    "storage_bucket": "ta-catering-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538217432287:android:f4f381ce20da2629b2156a",
+        "android_client_info": {
+          "package_name": "com.speedwagon.cato"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXt4Ov9JzjSiVkfH0gkcfgq-xoysdeXP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

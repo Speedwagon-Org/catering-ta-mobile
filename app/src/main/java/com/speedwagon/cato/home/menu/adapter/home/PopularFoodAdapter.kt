@@ -2,6 +2,7 @@ package com.speedwagon.cato.home.menu.adapter.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.home.item.PopularFood
+import com.speedwagon.cato.vendor.DetailVendor
 
 class PopularFoodAdapter(private val context: Context, private val itemList: List<PopularFood>) :
     RecyclerView.Adapter<PopularFoodAdapter.ViewHolder>(){
@@ -45,7 +47,10 @@ class PopularFoodAdapter(private val context: Context, private val itemList: Lis
             .load(currentItem.foodImgUrl)
             .into(holder.foodImageView)
         holder.cardViewContainer.setOnClickListener {
+            val intent = Intent(context, DetailVendor::class.java)
+            intent.putExtra("vendorName", currentItem.vendorName)
 
+            context.startActivity(intent)
         }
     }
 }

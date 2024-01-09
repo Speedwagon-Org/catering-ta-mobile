@@ -1,13 +1,14 @@
 package com.speedwagon.cato.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.speedwagon.cato.R
+import com.speedwagon.cato.home.HomeNavigation
 
 class Otp : AppCompatActivity() {
     private lateinit var otpOne: TextInputEditText
@@ -150,6 +151,12 @@ class Otp : AppCompatActivity() {
     }
 
     private fun verification(){
-        Toast.makeText(this, "Verifying... 🔎", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, HomeNavigation::class.java)
+        intent.putExtra(
+            "username",
+            getIntent().getStringExtra("username").toString()
+        )
+        startActivity(intent)
+        finish()
     }
 }

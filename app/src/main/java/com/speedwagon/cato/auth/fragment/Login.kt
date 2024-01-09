@@ -1,5 +1,6 @@
 package com.speedwagon.cato.auth.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.speedwagon.cato.R
+import com.speedwagon.cato.auth.Otp
 
 class Login : Fragment() {
     private lateinit var userUsername : TextInputEditText
@@ -50,7 +52,10 @@ class Login : Fragment() {
                 userPassword.requestFocus()
             }
         } else {
-            Toast.makeText(context, "Login sebagai $username 🔐", Toast.LENGTH_SHORT).show()
+            val intent = Intent(activity, Otp::class.java)
+            intent.putExtra("username", username)
+            intent.putExtra("password", password)
+            startActivity(intent)
         }
     }
 }

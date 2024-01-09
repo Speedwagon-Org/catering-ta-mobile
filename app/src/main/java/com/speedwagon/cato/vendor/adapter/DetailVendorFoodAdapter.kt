@@ -2,6 +2,7 @@ package com.speedwagon.cato.vendor.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.vendor.adapter.item.VendorFood
+import com.speedwagon.cato.vendor.foods.DetailFood
 
 class DetailVendorFoodAdapter (private val context: Context, private val itemList: List<VendorFood>):
     RecyclerView.Adapter<DetailVendorFoodAdapter.ViewHolder>() {
@@ -52,8 +54,10 @@ class DetailVendorFoodAdapter (private val context: Context, private val itemLis
             if (currentItem.foodDiscount > 0){
                 holder.foodDiscountTextView.visibility = View.VISIBLE
                 holder.foodDiscountTextView.text = "Discount " + currentItem.foodDiscount.toString() + "%"
+            } else {
+                holder.foodDiscountTextView.visibility = View.GONE
             }
-
+    
             holder.foodBtnAdd.setOnClickListener {
                 currentItem.foodQty++
                 notifyItemChanged(position)
@@ -67,8 +71,13 @@ class DetailVendorFoodAdapter (private val context: Context, private val itemLis
             }
 
             holder.cardViewContainer.setOnClickListener {
-                // Handle item click event here
-                // You can pass data or perform an action based on the clicked item
+                val intent = Intent(context, DetailFood::class.java)
+                intent.putExtra("foodName", currentItem.foodName)
+                intent.putExtra("foodQty", currentItem.foodQty)
+                intent.putExtra("foodImgUrl", currentItem.foodImgUrl)
+                intent.putExtra("foodPrice", currentItem.foodPrice)
+
+                context.startActivity(intent)
             }
         }
 

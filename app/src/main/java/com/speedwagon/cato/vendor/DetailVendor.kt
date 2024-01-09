@@ -1,10 +1,13 @@
 package com.speedwagon.cato.vendor
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.speedwagon.cato.R
+import com.speedwagon.cato.order.OrderDetail
 import com.speedwagon.cato.vendor.adapter.DetailVendorFoodAdapter
 import com.speedwagon.cato.vendor.adapter.item.VendorFood
 
@@ -39,5 +42,11 @@ class DetailVendor : AppCompatActivity() {
             )
         )
         rvDetailVendorFood.adapter = DetailVendorFoodAdapter(this, dummyDetailVendorFood)
+
+        val redirectPaymentDetail = findViewById<Button>(R.id.btn_detail_vendor_redirect_detail)
+        redirectPaymentDetail.setOnClickListener {
+            val intent = Intent(this, OrderDetail::class.java)
+            startActivity(intent)
+        }
     }
 }

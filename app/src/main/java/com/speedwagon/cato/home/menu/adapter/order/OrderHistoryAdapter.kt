@@ -1,6 +1,7 @@
 package com.speedwagon.cato.home.menu.adapter.order
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.home.item.OnProcessItem
+import com.speedwagon.cato.order.OrderStatus
 
 class OrderHistoryAdapter (private val context: Context, private val itemList: List<OnProcessItem>) :
     RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder>() {
@@ -38,8 +40,9 @@ class OrderHistoryAdapter (private val context: Context, private val itemList: L
             .into(holder.foodImageView)
 
         holder.cardViewContainer.setOnClickListener {
-            // Handle item click event here
-            // You can pass data or perform an action based on the clicked item
+            val intent = Intent(context, OrderStatus::class.java)
+
+            context.startActivity(intent)
         }
     }
 
