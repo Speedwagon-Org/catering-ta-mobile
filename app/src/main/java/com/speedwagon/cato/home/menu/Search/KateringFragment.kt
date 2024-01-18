@@ -1,32 +1,29 @@
-package com.speedwagon.cato.home.menu
+package com.speedwagon.cato.home.menu.Search
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.search.SearchVendorAdapter
 import com.speedwagon.cato.home.menu.adapter.search.item.Vendor
 
-
-class Search : Fragment() {
-    private lateinit var searchFilter: Spinner
-    private lateinit var searchBadge: Spinner
+class KateringFragment : Fragment() {
     private lateinit var rvSearchVendor: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-        spinnerInitialization(view)
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_katering, container, false)
         recyclerviewInitialization(view)
         return view
     }
+
     private fun recyclerviewInitialization(view: View){
         rvSearchVendor = view.findViewById(R.id.rv_search_vendor)
         rvSearchVendor.layoutManager = LinearLayoutManager(context,
@@ -84,30 +81,4 @@ class Search : Fragment() {
         )
         rvSearchVendor.adapter = SearchVendorAdapter(requireContext(), dummyDataSearch)
     }
-    private fun spinnerInitialization(view : View){
-        searchBadge = view.findViewById(R.id.sp_search_badge)
-        searchFilter = view.findViewById(R.id.sp_search_filter)
-
-        val filterAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.search_filter)
-        )
-        filterAdapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        val badgeAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.badge_filter)
-        )
-        badgeAdapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        searchFilter.adapter = filterAdapter
-        searchBadge.adapter = badgeAdapter
-    }
-
 }

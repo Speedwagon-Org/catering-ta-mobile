@@ -7,7 +7,7 @@ import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.Home
 import com.speedwagon.cato.home.menu.Order
 import com.speedwagon.cato.home.menu.Profile
-import com.speedwagon.cato.home.menu.Search
+import com.speedwagon.cato.home.menu.Search.Search
 
 class HomeNavigation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
