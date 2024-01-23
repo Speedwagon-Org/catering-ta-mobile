@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#EEEEEE">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:text="Hasil Pencarian : "
+        android:textStyle="bold"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="?android:attr/listDivider" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_vendor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_vendor_search"
+        android:paddingTop="16dp"/>
+
+</LinearLayout>

@@ -6,6 +6,10 @@
     tools:context=".home.menu.Home"
     android:orientation="vertical"
     android:background="#EEEEEE">
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <SearchView
         android:id="@+id/sv_search_vendor"
         android:layout_width="match_parent"
@@ -14,7 +18,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_white_background" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,27 +41,10 @@
             />
     </LinearLayout>
 
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:text="Hasil Pencarian : "
-        android:textStyle="bold"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText" />
-    <View
-        android:id="@+id/divider"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="?android:attr/listDivider" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_vendor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_vendor_search"
-        android:paddingTop="16dp"/>
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>
