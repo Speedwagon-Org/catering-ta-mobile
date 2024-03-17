@@ -1,8 +1,10 @@
 package com.speedwagon.cato.home.menu.adapter.home
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +14,16 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
-import com.speedwagon.cato.home.menu.adapter.home.item.NewlyOpen
+import com.speedwagon.cato.home.menu.adapter.home.item.NearVendor
 import com.speedwagon.cato.vendor.DetailVendor
 
-class NewlyOpenAdapter (private val context: Context, private val itemList: List<NewlyOpen>) :
-    RecyclerView.Adapter<NewlyOpenAdapter.ViewHolder>() {
+class NearVendorAdapter (private val context: Context, private val itemList: List<NearVendor>) :
+    RecyclerView.Adapter<NearVendorAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewContainer: CardView = itemView.findViewById(R.id.cv_item_newly_open_container)
         val vendorImageView: ImageView = itemView.findViewById(R.id.iv_item_newly_open_image)
         val vendorNameTextView: TextView = itemView.findViewById(R.id.tv_newly_open_vendor)
         val vendorDistanceTextView: TextView = itemView.findViewById(R.id.tv_newly_open_distance)
-        val vendorFoodTypeTextView: TextView = itemView.findViewById(R.id.tv_newly_opened_food_type)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_newly_open, parent, false)
@@ -35,15 +36,19 @@ class NewlyOpenAdapter (private val context: Context, private val itemList: List
 
         holder.vendorNameTextView.text = currentItem.vendorName
         holder.vendorDistanceTextView.text = currentItem.vendorDistance.toString() + " km"
-        holder.vendorFoodTypeTextView.text = currentItem.vendorFoodType
+        currentItem.vendorImgUrl!!.downloadUrl.addOnSuccessListener { uri  ->
+            println("result $uri")
+            Glide.with(context)
+                .load(uri)
+                .into(holder.vendorImageView)
+        }.addOnFailureListener { exception ->
+            Log.e(ContentValues.TAG, "Error getting download URL", exception)
+        }
 
-        Glide.with(context)
-            .load(currentItem.vendorImgUrl)
-            .into(holder.vendorImageView)
 
         holder.cardViewContainer.setOnClickListener {
             val intent = Intent(context, DetailVendor::class.java)
-            intent.putExtra("vendorName", currentItem.vendorName)
+            intent.putExtra(currentItem.vendorId, currentItem.vendorName)
 
             context.startActivity(intent)
         }

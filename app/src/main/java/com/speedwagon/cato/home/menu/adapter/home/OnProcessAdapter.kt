@@ -1,7 +1,9 @@
 package com.speedwagon.cato.home.menu.adapter.home
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +34,20 @@ class OnProcessAdapter(private val context: Context, private val itemList: List<
         val currentItem = itemList[position]
 
         holder.foodNameTextView.text = currentItem.foodName
-        holder.vendorNameTextView.text = currentItem.vendorName
-        holder.foodStatusTextView.text = currentItem.foodStatus.toString()
 
-        Glide.with(context)
-            .load(currentItem.foodImgUrl)
-            .into(holder.foodImageView)
+        holder.vendorNameTextView.text = currentItem.vendorName
+        holder.foodStatusTextView.text = currentItem.foodStatus
+
+        currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener { uri ->
+//            Toast.makeText(context, "$uri", Toast.LENGTH_SHORT).show()
+
+            Glide.with(context)
+                .load(uri)
+                .into(holder.foodImageView)
+        }?.addOnFailureListener { exception ->
+            Log.e(TAG, "Error getting download URL", exception)
+        }
+
 
         holder.cardViewContainer.setOnClickListener {
             val intent = Intent(context, OrderStatus::class.java)

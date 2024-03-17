@@ -1,53 +1,174 @@
 package com.speedwagon.cato.home.menu
 
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.speedwagon.cato.R
-import com.speedwagon.cato.home.menu.adapter.home.NewlyOpenAdapter
+import com.speedwagon.cato.home.menu.adapter.home.NearVendorAdapter
 import com.speedwagon.cato.home.menu.adapter.home.OnProcessAdapter
 import com.speedwagon.cato.home.menu.adapter.home.PopularFoodAdapter
-import com.speedwagon.cato.home.menu.adapter.home.item.NewlyOpen
+import com.speedwagon.cato.home.menu.adapter.home.item.NearVendor
 import com.speedwagon.cato.home.menu.adapter.home.item.OnProcessItem
 import com.speedwagon.cato.home.menu.adapter.home.item.PopularFood
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.time.LocalTime
+import java.util.Locale
 
-
+@Suppress("DEPRECATION")
 class Home : Fragment() {
     private lateinit var rvOnProcessItem: RecyclerView
     private lateinit var rvPopularItem : RecyclerView
-    private lateinit var rvNewlyOpen: RecyclerView
+    private lateinit var rvNearVendor: RecyclerView
+    private lateinit var tvUserName: TextView
+    private lateinit var tvBerandaWelcomeMessage : TextView
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var tvLocation: TextView
+    private lateinit var orders : ArrayList<Map<String, *>>
+    private lateinit var vendors : ArrayList<Map<String, *>>
+
+    private lateinit var db : FirebaseFirestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        tvBerandaWelcomeMessage = view.findViewById(R.id.tv_beranda_welcome_msg)
+        tvBerandaWelcomeMessage.text = getTimeOfDay()
+
+        // Location Get
+        tvLocation = view.findViewById(R.id.tv_beranda_location)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        getLastLocation()
+
+        // Firebase init
+        val auth = FirebaseAuth.getInstance()
+        val currentUserId = auth.currentUser?.uid
+        db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("customer")
+        val orderRef = db.collection("orders")
+        val vendorRef = db.collection("vendor")
+        orders = ArrayList()
+        vendors = ArrayList()
+        if (currentUserId != null) {
+            vendorRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    val snapshot = task.result
+                    if (snapshot != null){
+                        for (document in snapshot.documents){
+                            val vendorId = document.id
+                            val vendorData = document.data
+                            vendors.add(
+                                mapOf(
+                                    "id" to vendorId,
+                                    "data" to vendorData
+                                )
+                            )
+                        }
+                        setVendorRecyclerView()
+                    }
+                }
+            }
+            orderRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val querySnapshot = task.result
+                    if (querySnapshot != null) {
+                        val totalOrders = querySnapshot.documents.size
+                        var completedOrders = 0
+                        for (document in querySnapshot.documents) {
+                            val orderId = document.id
+                            val orderData = document.data
+                            if (orderData?.get("customer") == currentUserId) {
+                                val foods: ArrayList<Map<String, Any>> = ArrayList()
+                                val foodRef = orderRef.document(orderId).collection("foods")
+                                val foodPromise = foodRef.get()
+                                foodPromise.addOnSuccessListener { foodsRes ->
+                                    for (food in foodsRes.documents) {
+                                        val foodId = food.id
+                                        val foodData = food.data
+                                        foods.add(
+                                            mapOf(
+                                                "id" to foodId,
+                                                "food" to foodData as Map<String, Any>
+                                            )
+                                        )
+                                    }
+                                    orders.add(
+                                        mapOf(
+                                            "id" to orderId,
+                                            "order" to orderData,
+                                            "foods" to foods
+                                        )
+                                    )
+                                    completedOrders++
+                                    if (completedOrders == totalOrders) {
+                                        CoroutineScope(Dispatchers.Main).launch {
+                                            setOrdersRecyclerView()
+                                        }
+                                    }
+                                }.addOnFailureListener { exception ->
+                                    Log.e(TAG, "Error getting foods: ", exception)
+                                }
+                            } else {
+                                completedOrders++
+                                if (completedOrders == totalOrders) {
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        setOrdersRecyclerView()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "Error getting orders: ", task.exception)
+                }
+            }
+
+
+            userRef.document(currentUserId).get().addOnCompleteListener{task ->
+                if (task.isSuccessful){
+                    val doc = task.result
+                    if (doc.exists()){
+                        val name = doc.get("name")
+                        tvUserName.text = name.toString()
+                    } else {
+                        Toast.makeText(context, "doc doesn't exist", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    task.exception?.message?.let {
+                        Log.d(TAG, it)
+                    }
+                }
+            }
+        }
         // RecyclerView value initializer
         rvOnProcessItem = view.findViewById(R.id.rv_home_on_process)
         rvPopularItem = view.findViewById(R.id.rv_home_popular)
-        rvNewlyOpen = view.findViewById(R.id.rv_home_newly_open)
+        rvNearVendor = view.findViewById(R.id.rv_home_newly_open)
+        tvUserName = view.findViewById(R.id.tv_beranda_username)
 
-        // On Process RecyclerView
-        rvOnProcessItem.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
-        val dummyDataOnProcessList = listOf(
-            OnProcessItem(
-                foodName = "Food 1",
-                vendorName = "Vendor 1",
-                foodStatus = 1,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg"
-            ),
-            OnProcessItem(
-                foodName = "Food 2",
-                vendorName = "Vendor 2",
-                foodStatus = 1,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg"
-            )
-        )
-        rvOnProcessItem.adapter = OnProcessAdapter(requireContext(), dummyDataOnProcessList)
 
         // Popular RecyclerVIew
         rvPopularItem.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -61,18 +182,114 @@ class Home : Fragment() {
         )
         rvPopularItem.adapter = PopularFoodAdapter(requireContext(), dummyDataPopularFood)
 
-        // NewlyOpen RecyclerView
-        rvNewlyOpen.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val dummyDataNewlyOpen = listOf(
-            NewlyOpen(
-                vendorName = "Vendor 1",
-                vendorFoodType = "Type 1",
-                vendorDistance = 1.1,
-                vendorImgUrl = "data:image/png;base64,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"
-            )
-        )
-        rvNewlyOpen.adapter = NewlyOpenAdapter(requireContext(), dummyDataNewlyOpen)
-
         return view
     }
+
+
+    private suspend fun getVendor(id: String): String {
+        return withContext(Dispatchers.IO) {
+            val vendorRef = db.collection("vendor").document(id).get().await()
+            if (vendorRef.exists()) {
+                return@withContext vendorRef.getString("name") ?: "No Name"
+            } else {
+                return@withContext "No Name"
+            }
+        }
+    }
+
+    private fun getTimeOfDay(): String {
+        val currentTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalTime.now()
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        return when {
+            currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isBefore(LocalTime.of(12, 0)) -> "Selamat Pagi"
+            currentTime.isAfter(LocalTime.of(12, 0)) && currentTime.isBefore(LocalTime.of(18, 0)) -> "Selamat Siang"
+            currentTime.isAfter(LocalTime.of(18, 0)) && currentTime.isBefore(LocalTime.of(21, 0)) -> "Selamat Sore"
+            else -> "Selamat Malam"
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getLastLocation() {
+        try {
+            val (town, street) = getTownAndStreet(3.592023693556031, 98.68080645582296)
+            tvLocation.text = "$town, $street"
+        } catch (e : Exception){
+            Toast.makeText(context, "Something Wrong : ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getTownAndStreet(latitude: Double, longitude: Double): Pair<String?, String?> {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        var town: String? = null
+        var street: String? = null
+
+        try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val address = addresses[0]
+                    town = address.locality.removePrefix("Kecamatan").trim()
+                    street = address.thoroughfare
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return Pair(town, street)
+    }
+    private fun setVendorRecyclerView() {
+        rvNearVendor.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val dataNearVendor : ArrayList<NearVendor> = ArrayList()
+
+        for (vendor in vendors){
+            val id = vendor["id"] as String
+            val name = (vendor["data"] as Map<*,*>) ["name"] as String
+            val img =(vendor["data"] as Map<*,*>) ["profile_picture"] as String
+            val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(img)
+            dataNearVendor.add(
+                NearVendor(
+                    vendorId = id,
+                    vendorName = name,
+                    vendorDistance = 10.1,
+                    vendorImgUrl = storageReference
+                )
+            )
+        }
+        rvNearVendor.adapter = NearVendorAdapter(requireContext(), dataNearVendor)
+    }
+    private suspend fun setOrdersRecyclerView() {
+        // On Process RecyclerView
+        rvOnProcessItem.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val dataOnProcessOrders: ArrayList<OnProcessItem> = ArrayList()
+
+        for (order in orders) {
+            val id = order["id"] as String
+            val foodName = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["name"] as String
+            val foodStatus = (order["order"] as Map<*, *>)["status"] as String
+            val vendorId = (order["order"] as Map<*, *>)["vendor"] as String
+            val foodImgPath = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["photo"] as String
+            val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(foodImgPath)
+
+            val vendorName = withContext(Dispatchers.IO) {
+                getVendor(vendorId)
+            }
+
+            dataOnProcessOrders.add(
+                OnProcessItem(
+                    orderId = id,
+                    foodName = foodName,
+                    foodStatus = foodStatus,
+                    foodImgUrl = storageReference,
+                    vendorName = vendorName
+                )
+            )
+        }
+
+        rvOnProcessItem.adapter = OnProcessAdapter(requireContext(), dataOnProcessOrders)
+    }
+
 }

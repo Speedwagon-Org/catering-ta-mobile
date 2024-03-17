@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.lifecycle.Lifecycle
-import com.speedwagon.cato.home.menu.Search.KateringFragment
-import com.speedwagon.cato.home.menu.Search.PesanAntarFragment
+import com.speedwagon.cato.home.menu.search.KateringFragment
+import com.speedwagon.cato.home.menu.search.PesanAntarFragment
 
 class FragmentPageAdapter (
     fragmentManager: FragmentManager,

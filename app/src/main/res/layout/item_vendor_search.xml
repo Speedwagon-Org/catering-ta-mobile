@@ -68,13 +68,13 @@
                 app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <ImageView
-            android:id="@+id/iv_search_vendor_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:srcCompat="@drawable/ic_vendor_badge"
-            tools:ignore="ContentDescription" />
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_search_vendor_badge"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="8dp"-->
+<!--            app:srcCompat="@drawable/ic_vendor_badge"-->
+<!--            tools:ignore="ContentDescription" />-->
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

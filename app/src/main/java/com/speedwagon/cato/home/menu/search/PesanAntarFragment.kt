@@ -1,4 +1,4 @@
-package com.speedwagon.cato.home.menu.Search
+package com.speedwagon.cato.home.menu.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,7 +11,7 @@ import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.search.SearchVendorAdapter
 import com.speedwagon.cato.home.menu.adapter.search.item.Vendor
 
-class KateringFragment : Fragment() {
+class PesanAntarFragment : Fragment() {
     private lateinit var rvSearchVendor: RecyclerView
 
     override fun onCreateView(
@@ -19,11 +19,10 @@ class KateringFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_katering, container, false)
+        val view = inflater.inflate(R.layout.fragment_pesan_antar, container, false)
         recyclerviewInitialization(view)
         return view
     }
-
     private fun recyclerviewInitialization(view: View){
         rvSearchVendor = view.findViewById(R.id.rv_search_vendor)
         rvSearchVendor.layoutManager = LinearLayoutManager(context,

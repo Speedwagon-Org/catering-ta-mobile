@@ -24,7 +24,7 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
         val searchVendorNameTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_name)
         val searchVendorFoodTypeTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_food_type)
         val searchVendorDistanceTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_distance)
-        val searchVendorBadgeImageView: ImageView = itemView.findViewById(R.id.iv_search_vendor_badge)
+//        val searchVendorBadgeImageView: ImageView = itemView.findViewById(R.id.iv_search_vendor_badge)
 
     }
 

@@ -33,16 +33,18 @@ class Order : Fragment() {
         rvOrderHistory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val dummyDataOnProcessList = listOf(
             OnProcessItem(
+                orderId = "10",
                 foodName = "Food 1",
                 vendorName = "Vendor 1",
-                foodStatus = 1,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg"
+                foodStatus = "On Proess",
+                foodImgUrl = null
             ),
             OnProcessItem(
+                orderId = "20",
                 foodName = "Food 2",
                 vendorName = "Vendor 2",
-                foodStatus = 1,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg"
+                foodStatus = "On Proess",
+                foodImgUrl = null
             )
         )
         rvOrderHistory.adapter = OrderHistoryAdapter(requireContext(), dummyDataOnProcessList)

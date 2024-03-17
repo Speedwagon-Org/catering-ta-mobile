@@ -1,4 +1,4 @@
-package com.speedwagon.cato.home.menu.Search
+package com.speedwagon.cato.home.menu.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
