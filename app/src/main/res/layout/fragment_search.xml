@@ -10,36 +10,6 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <SearchView
-        android:id="@+id/sv_search_vendor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_white_background" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="16dp">
-        <Spinner
-            android:id="@+id/sp_search_filter"
-            android:paddingHorizontal="16dp"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_spinner_background"
-            />
-        <Spinner
-            android:id="@+id/sp_search_badge"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:background="@drawable/rounded_spinner_background"
-            />
-    </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager2"

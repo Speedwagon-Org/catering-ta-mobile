@@ -1,9 +1,10 @@
 package com.speedwagon.cato.home.menu.adapter.search.item
 
+import com.google.firebase.storage.StorageReference
+
 data class Vendor (
-    val searchVendorImgUrl : String,
-    val searchVendorName : String,
-    val searchVendorType : String,
-    val searchVendorDistance : Double,
-    val searchVendorBadge : Int
+    val id : String,
+    val imgUrl : StorageReference?,
+    val name : String,
+    val distance : Double,
 )

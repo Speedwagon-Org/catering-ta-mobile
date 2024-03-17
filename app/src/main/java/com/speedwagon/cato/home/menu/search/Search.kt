@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -14,20 +12,15 @@ import com.speedwagon.cato.home.menu.adapter.search.FragmentPageAdapter
 
 
 class Search : Fragment() {
-    private lateinit var searchFilter: Spinner
-    private lateinit var searchBadge: Spinner
     private  lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var adapter: FragmentPageAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
-        spinnerInitialization(view)
-
         //connect tablayout to viewpager2
         val fragmentManager = requireActivity().supportFragmentManager
         tabLayout =  view.findViewById(R.id.tabs)!!
@@ -63,30 +56,4 @@ class Search : Fragment() {
 
         return view
     }
-    private fun spinnerInitialization(view : View){
-        searchBadge = view.findViewById(R.id.sp_search_badge)
-        searchFilter = view.findViewById(R.id.sp_search_filter)
-
-        val filterAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.search_filter)
-        )
-        filterAdapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        val badgeAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.badge_filter)
-        )
-        badgeAdapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        searchFilter.adapter = filterAdapter
-        searchBadge.adapter = badgeAdapter
-    }
-
 }

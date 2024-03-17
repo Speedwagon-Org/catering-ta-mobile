@@ -22,9 +22,7 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
         val searchVendorContainerCardView : CardView = itemView.findViewById(R.id.cv_search_vendor_container)
         val searchVendorImageImageView : ImageView = itemView.findViewById(R.id.iv_search_vendor_image)
         val searchVendorNameTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_name)
-        val searchVendorFoodTypeTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_food_type)
         val searchVendorDistanceTextView : TextView = itemView.findViewById(R.id.tv_search_vendor_distance)
-//        val searchVendorBadgeImageView: ImageView = itemView.findViewById(R.id.iv_search_vendor_badge)
 
     }
 
@@ -40,15 +38,17 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-        holder.searchVendorDistanceTextView.text = currentItem.searchVendorDistance.toString() + " km"
-        holder.searchVendorNameTextView.text = currentItem.searchVendorName
-        holder.searchVendorFoodTypeTextView.text = currentItem.searchVendorType
-        Glide.with(context)
-            .load(currentItem.searchVendorImgUrl)
-            .into(holder.searchVendorImageImageView)
+        holder.searchVendorDistanceTextView.text = currentItem.distance.toString() + " km"
+        holder.searchVendorNameTextView.text = currentItem.name
+        currentItem.imgUrl!!.downloadUrl.addOnSuccessListener {uri ->
+            Glide.with(context)
+                .load(uri)
+                .into(holder.searchVendorImageImageView)
+        }
+
         holder.searchVendorContainerCardView.setOnClickListener {
             val intent = Intent(context, DetailVendor::class.java)
-            intent.putExtra("vendorName", currentItem.searchVendorName)
+            intent.putExtra("vendor_id", currentItem.id)
 
             context.startActivity(intent)
         }
