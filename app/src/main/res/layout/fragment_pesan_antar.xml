@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="#EEEEEE">
+
     <SearchView
         android:id="@+id/sv_search_vendor_one_delivery"
         android:layout_width="match_parent"
