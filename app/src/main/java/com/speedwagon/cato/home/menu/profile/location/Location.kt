@@ -33,32 +33,42 @@ class Location : AppCompatActivity() {
             startActivity(intent)
         }
         if (currentId != null) {
-            userRef.document(currentId).collection("location").get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val res = task.result
-                    if (res != null) {
-                        for (doc in res) {
-                            locations.add(
-                                LocationItem(
-                                    id = doc.id,
-                                    label = doc.get("label") as String,
-                                    description = doc.get("detail") as String,
-                                    lat = doc.getGeoPoint("location")!!.latitude,
-                                    long = doc.getGeoPoint("location")!!.longitude,
-                                    isDefault = doc.get("active") as Boolean
-                                )
-                            )
+            var defaultLocationId : String
+            userRef.document(currentId).get().addOnCompleteListener { userTask ->
+                if (userTask.isSuccessful){
+                    val data = userTask.result
+                    if (data.exists()){
+                        defaultLocationId = data.get("default_location") as String
+
+                        userRef.document(currentId).collection("location").get().addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+
+                                val res = task.result
+                                if (res != null) {
+                                    for (doc in res) {
+                                        locations.add(
+                                            LocationItem(
+                                                id = doc.id,
+                                                label = doc.get("label") as String,
+                                                description = doc.get("detail") as String,
+                                                lat = doc.getGeoPoint("location")!!.latitude,
+                                                long = doc.getGeoPoint("location")!!.longitude,
+                                                isDefault = (defaultLocationId == doc.id)
+                                            )
+                                        )
+                                    }
+                                    rvListLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)
+                                    rvListLocation.adapter = LocationsAdapter(this, locations)
+                                } else {
+                                    Log.d(TAG, "No documents found")
+                                }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ${task.exception}")
+                            }
                         }
-                        rvListLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)
-                        rvListLocation.adapter = LocationsAdapter(this, locations)
-                    } else {
-                        Log.d(TAG, "No documents found")
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ${task.exception}")
                 }
             }
-
         }
     }
 }

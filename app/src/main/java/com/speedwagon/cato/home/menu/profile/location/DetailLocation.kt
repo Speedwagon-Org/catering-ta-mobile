@@ -1,14 +1,16 @@
 package com.speedwagon.cato.home.menu.profile.location
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
-import android.widget.Button
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +29,8 @@ class DetailLocation : AppCompatActivity() {
         val label = findViewById<EditText>(R.id.et_detail_location_label)
         val detail = findViewById<EditText>(R.id.et_detail_location_description)
         val isDefault = findViewById<SwitchMaterial>(R.id.sw_detail_location)
-        val btnAction = findViewById<Button>(R.id.btn_detail_location_update)
+        val btnAction = findViewById<FloatingActionButton>(R.id.fab_location_confirm)
+        val btnDelete = findViewById<FloatingActionButton>(R.id.fab_location_delete)
 
         val auth = FirebaseAuth.getInstance()
         val currentId = auth.currentUser?.uid
@@ -46,55 +49,112 @@ class DetailLocation : AppCompatActivity() {
                 val lat = 0.0
                 val lng = 0.0
                 val geoPoint = GeoPoint(lat, lng)
-                val data = hashMapOf(
-                    "active" to isDefault.isChecked,
+                val locationData = hashMapOf(
                     "detail" to detail.text.toString(),
                     "label" to label.text.toString(),
                     "location" to geoPoint
                 )
+                var defaultLocation : Map<String, Any> = hashMapOf()
+                if (isDefault.isChecked){
+                    defaultLocation = hashMapOf(
+                        "default_location" to locationItem.id
+                    )
+                }
+                if (defaultLocation["default_location"] != locationItem.isDefault || locationData["detail"] != locationItem.description || locationData["label"] != locationItem.label ){
+                    AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("Apakah anda yakin memperbaharui lokasi ${locationItem.label}?")
+                        .setPositiveButton("Iya") { _, _ ->
+                            if (detail.text.isNotEmpty() && label.text.isNotEmpty() && currentId != null) {
+                                Log.d(TAG, "Notice : Trying to update data")
 
-                if (detail.text.isNotEmpty() && label.text.isNotEmpty() && currentId != null) {
-                    Log.d(TAG, "Notice : Trying to update data")
+                                userRef.document(currentId).update(defaultLocation).addOnSuccessListener {
+                                    Log.d(TAG, "Default location successfully updated!")
+                                }.addOnFailureListener { e ->
+                                    Log.w(TAG, "Default location failed updated", e)
+                                }
 
-                    userRef.document(currentId)
-                        .collection("location")
-                        .document(locationItem.id)
-                        .set(data)
-                        .addOnSuccessListener {
-                            Log.d(TAG, "DocumentSnapshot successfully updated!")
-                            Toast.makeText(this, "Location Updated Successfully", Toast.LENGTH_SHORT).show()
-                            finish()
+                                userRef.document(currentId)
+                                    .collection("location")
+                                    .document(locationItem.id)
+                                    .set(locationData)
+                                    .addOnSuccessListener {
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!")
+                                        Toast.makeText(this, "Lokasi telah di perbaharui", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.w(TAG, "Error updating document", e)
+                                    }
+                            }
                         }
-                        .addOnFailureListener { e ->
-                            Log.w(TAG, "Error updating document", e)
-                        }
+                        .setNegativeButton("Tidak", null)
+                        .show()
+                } else {
+                    finish()
                 }
             }
 
+            btnDelete.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle("Logout")
+                    .setMessage("Apakah anda yakin menghapus lokasi ${locationItem.label}?")
+                    .setPositiveButton("Iya") { _, _ ->
+                        if (currentId != null) {
+                            userRef
+                                .document(currentId)
+                                .collection("location")
+                                .document(locationItem.id)
+                                .delete()
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                                    Toast.makeText(this, "Lokasi telah dihapus", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w(TAG, "Error deleting document", e)
+                                    Toast.makeText(this, "Lokasi gagal untuk dihapus", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    }
+                    .setNegativeButton("Tidak", null)
+                    .show()
+
+            }
+
         } else {
-            btnAction.text = "Tambah Alamat"
+            btnDelete.visibility = View.GONE
             // Add Data
             btnAction.setOnClickListener{
                 val lat = 0.0
                 val lng = 0.0
                 val geoPoint = GeoPoint(lat, lng)
                 val data = hashMapOf(
-                    "active" to false,
                     "detail" to detail.text.toString(),
                     "label" to label.text.toString(),
                     "location" to geoPoint
                 )
 
                 if (detail.text.isNotEmpty() && label.text.isNotEmpty() && currentId != null){
-                    Log.d(TAG, "Notice : Trying to write data")
-                    userRef.document(currentId).collection("location").add(data).addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                        Toast.makeText(this, "Location Saved Successfully", Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-                        .addOnFailureListener { e ->
-                            Log.w(TAG, "Error adding document", e)
+
+                    AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("Apakah anda yakin untuk menambahkan lokasi ${data["label"]}?")
+                        .setPositiveButton("Iya") { _, _ ->
+                            Log.d(TAG, "Notice : Trying to write data")
+                            userRef.document(currentId).collection("location").add(data)
+                                .addOnSuccessListener { documentReference ->
+                                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                                Toast.makeText(this, "Location Saved Successfully", Toast.LENGTH_SHORT).show()
+                                finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w(TAG, "Error adding document", e)
+                                }
                         }
+                        .setNegativeButton("Tidak", null)
+                        .show()
+
                 }
             }
         }
