@@ -4,83 +4,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".order.OrderStatus">
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:orientation="vertical">
-        <GridLayout
-
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Pesanan dikonfirmasi"/>
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/cb_order_status_confirming"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:layout_gravity="end"/>
 
-        </GridLayout>
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="8dp"
             android:background="?android:attr/listDivider" />
 
-        <GridLayout
-
+        <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Pesanan sedang disiapkan"/>
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/cb_order_status_on_process"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:layout_gravity="end"/>
 
-        </GridLayout>
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="8dp"
             android:background="?android:attr/listDivider" />
-        <GridLayout
-
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Pesanan sedang diantar"/>
             <CheckBox
-                android:id="@+id/checkBox3"
+                android:id="@+id/cb_order_status_on_delivery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:layout_gravity="end"/>
 
-        </GridLayout>
+        </LinearLayout>
+
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="8dp"
             android:background="?android:attr/listDivider" />
-
+        <TextView
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#5cb85c"
+            android:layout_marginTop="16dp"
+            android:textSize="21sp"
+            android:id="@+id/tv_order_status_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
         <Button
-            android:id="@+id/InputKodeCTS"
+            android:id="@+id/btn_order_status_insert_cts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -88,11 +103,12 @@
             android:text="MASUKAN KODE CTS"/>
 
         <TextView
+            android:id="@+id/tv_order_status_cancel_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Batalkan Pesanan"
             android:layout_gravity="center_horizontal"/>
 
-    </GridLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

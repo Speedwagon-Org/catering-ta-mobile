@@ -7,20 +7,21 @@
     android:orientation="vertical"
     android:background="#EEEEEE">
 
-    <SearchView
-        android:id="@+id/sv_order_vendor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_white_background" />
+<!--    <SearchView-->
+<!--        android:id="@+id/sv_order_vendor"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:background="@drawable/rounded_white_background" />-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="16dp">
         <Spinner
+            android:visibility="gone"
             android:id="@+id/sp_order_status_filter"
             android:paddingHorizontal="16dp"
             android:layout_width="170dp"

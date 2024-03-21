@@ -1,7 +1,9 @@
 package com.speedwagon.cato.home.menu.adapter.order
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,15 +35,20 @@ class OrderHistoryAdapter (private val context: Context, private val itemList: L
 
         holder.foodNameTextView.text = currentItem.foodName
         holder.vendorNameTextView.text = currentItem.vendorName
-        holder.foodStatusTextView.text = currentItem.foodStatus.toString()
+        holder.foodStatusTextView.text = currentItem.foodStatus
 
-        Glide.with(context)
-            .load(currentItem.foodImgUrl)
-            .into(holder.foodImageView)
+        currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener {uri ->
+            Glide.with(context)
+                .load(uri)
+                .into(holder.foodImageView)
+        }?.addOnFailureListener { exception ->
+            Log.e(ContentValues.TAG, "Error getting download URL", exception)
+        }
+
 
         holder.cardViewContainer.setOnClickListener {
             val intent = Intent(context, OrderStatus::class.java)
-
+            intent.putExtra("orderId", currentItem.orderId)
             context.startActivity(intent)
         }
     }

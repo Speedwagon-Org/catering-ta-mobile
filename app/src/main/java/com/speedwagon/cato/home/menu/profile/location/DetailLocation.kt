@@ -125,7 +125,7 @@ class DetailLocation : AppCompatActivity() {
 
             btnDelete.setOnClickListener {
                 AlertDialog.Builder(this)
-                    .setTitle("Logout")
+                    .setTitle("Hapus Lokasi")
                     .setMessage("Apakah anda yakin menghapus lokasi ${locationItem.label}?")
                     .setPositiveButton("Iya") { _, _ ->
                         if (currentId != null) {

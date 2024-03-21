@@ -39,7 +39,6 @@ class OnProcessAdapter(private val context: Context, private val itemList: List<
         holder.foodStatusTextView.text = currentItem.foodStatus
 
         currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener { uri ->
-//            Toast.makeText(context, "$uri", Toast.LENGTH_SHORT).show()
 
             Glide.with(context)
                 .load(uri)
@@ -51,7 +50,7 @@ class OnProcessAdapter(private val context: Context, private val itemList: List<
 
         holder.cardViewContainer.setOnClickListener {
             val intent = Intent(context, OrderStatus::class.java)
-
+            intent.putExtra("orderId", currentItem.orderId)
             context.startActivity(intent)
         }
     }

@@ -50,6 +50,7 @@ class Home : Fragment() {
     private lateinit var userRef : CollectionReference
     private lateinit var db : FirebaseFirestore
     private lateinit var auth : FirebaseAuth
+    private lateinit var tvOrderOnProcessAvailable : TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +60,7 @@ class Home : Fragment() {
 
         tvBerandaWelcomeMessage = view.findViewById(R.id.tv_beranda_welcome_msg)
         tvBerandaWelcomeMessage.text = getTimeOfDay()
-
+        tvOrderOnProcessAvailable = view.findViewById(R.id.tv_home_on_process_is_not_available)
         // Location Get
         tvLocation = view.findViewById(R.id.tv_beranda_location)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -97,12 +98,13 @@ class Home : Fragment() {
                 if (task.isSuccessful) {
                     val querySnapshot = task.result
                     if (querySnapshot != null) {
-                        val totalOrders = querySnapshot.documents.size
+
                         var completedOrders = 0
                         for (document in querySnapshot.documents) {
                             val orderId = document.id
                             val orderData = document.data
-                            if (orderData?.get("customer") == currentUserId) {
+                            val filterStatus = listOf("waiting", "confirm", "on process", "on delivery")
+                            if (orderData?.get("customer") == currentUserId && filterStatus.contains(orderData["status"])) {
                                 val foods: ArrayList<Map<String, Any>> = ArrayList()
                                 val foodRef = orderRef.document(orderId).collection("foods")
                                 val foodPromise = foodRef.get()
@@ -125,7 +127,7 @@ class Home : Fragment() {
                                         )
                                     )
                                     completedOrders++
-                                    if (completedOrders == totalOrders) {
+                                    if (completedOrders < 6) {
                                         CoroutineScope(Dispatchers.Main).launch {
                                             setOrdersRecyclerView()
                                         }
@@ -135,7 +137,8 @@ class Home : Fragment() {
                                 }
                             } else {
                                 completedOrders++
-                                if (completedOrders == totalOrders) {
+                                if (completedOrders < 6) {
+
                                     CoroutineScope(Dispatchers.Main).launch {
                                         setOrdersRecyclerView()
                                     }
@@ -290,6 +293,7 @@ class Home : Fragment() {
         rvNearVendor.adapter = NearVendorAdapter(requireContext(), dataNearVendor)
     }
     private suspend fun setOrdersRecyclerView() {
+        tvOrderOnProcessAvailable.visibility = View.GONE
         // On Process RecyclerView
         rvOnProcessItem.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val dataOnProcessOrders: ArrayList<OnProcessItem> = ArrayList()

@@ -98,6 +98,12 @@
                 android:text="Makanan sedang diproses"
                 tools:ignore="HardcodedText" />
 
+            <TextView
+                android:id="@+id/tv_home_on_process_is_not_available"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tidak ada pesanan yang aktif" />
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
