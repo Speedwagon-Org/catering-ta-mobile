@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CaTo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_daftar">DAFTAR</string>
@@ -27,4 +27,6 @@
     <string name="promo_code">Kode-kode promo</string>
     <string name="order_type">Pesan Antar, Langganan, Ambil Sendiri</string>
     <string name="food_name">Fried Rice</string>
+    <string name="title_activity_location_picker">LocationPicker</string>
+    <string name="mapbox_access_token" translatable="false" tools:ignore="UnusedResources">pk.eyJ1IjoidGl0b3JhaG1hbiIsImEiOiJjbHR5ZjQ3MmUwZmQwMnJxbzY3enRnejNqIn0.mAvBeXz9NTNyY18IBBxE9Q</string>
 </resources>

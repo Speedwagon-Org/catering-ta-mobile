@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.speedwagon.cato.R
@@ -46,8 +47,9 @@ class Home : Fragment() {
     private lateinit var tvLocation: TextView
     private lateinit var orders : ArrayList<Map<String, *>>
     private lateinit var vendors : ArrayList<Map<String, *>>
-
+    private lateinit var userRef : CollectionReference
     private lateinit var db : FirebaseFirestore
+    private lateinit var auth : FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,17 +63,17 @@ class Home : Fragment() {
         // Location Get
         tvLocation = view.findViewById(R.id.tv_beranda_location)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        getLastLocation()
 
         // Firebase init
-        val auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         val currentUserId = auth.currentUser?.uid
         db = FirebaseFirestore.getInstance()
-        val userRef = db.collection("customer")
+        userRef = db.collection("customer")
         val orderRef = db.collection("orders")
         val vendorRef = db.collection("vendor")
         orders = ArrayList()
         vendors = ArrayList()
+        getLastLocation()
         if (currentUserId != null) {
             vendorRef.get().addOnCompleteListener { task ->
                 if (task.isSuccessful){
@@ -186,16 +188,7 @@ class Home : Fragment() {
     }
 
 
-    private suspend fun getVendor(id: String): String {
-        return withContext(Dispatchers.IO) {
-            val vendorRef = db.collection("vendor").document(id).get().await()
-            if (vendorRef.exists()) {
-                return@withContext vendorRef.getString("name") ?: "No Name"
-            } else {
-                return@withContext "No Name"
-            }
-        }
-    }
+
 
     private fun getTimeOfDay(): String {
         val currentTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -210,15 +203,50 @@ class Home : Fragment() {
             else -> "Selamat Malam"
         }
     }
-
+    private suspend fun getVendor(id: String): String {
+        return withContext(Dispatchers.IO) {
+            val vendorRef = db.collection("vendor").document(id).get().await()
+            if (vendorRef.exists()) {
+                return@withContext vendorRef.getString("name") ?: "No Name"
+            } else {
+                return@withContext "No Name"
+            }
+        }
+    }
     @SuppressLint("SetTextI18n")
     private fun getLastLocation() {
-        try {
-            val (town, street) = getTownAndStreet(3.592023693556031, 98.68080645582296)
-            tvLocation.text = "$town, $street"
-        } catch (e : Exception){
-            Toast.makeText(context, "Something Wrong : ${e.message}", Toast.LENGTH_SHORT).show()
+        val userId = auth.currentUser?.uid
+        if (userId != null){
+            userRef.document(userId).get().addOnCompleteListener {userTask ->
+                if(userTask.isSuccessful){
+                    val data = userTask.result
+                    if(data.exists()){
+                        val locationDefaultId = data.getString("default_location")
+                        val locationRef = userRef.document(userId).collection("location")
+                        if (locationDefaultId != null){
+                            locationRef.document(locationDefaultId).get().addOnCompleteListener {locationTask ->
+                                if (locationTask.isSuccessful){
+                                    val locationData = locationTask.result
+                                    val latitude = locationData.getGeoPoint("location")?.latitude
+                                    val longitude = locationData.getGeoPoint("location")?.longitude
+                                    if (latitude == null || longitude == null){
+                                        tvLocation.text = "Pilih lokasi"
+                                    } else {
+                                        val (town, street) = getTownAndStreet(latitude, longitude)
+                                        tvLocation.text = "$town, $street"
+                                    }
+
+                                }
+                            }
+                        } else {
+                            tvLocation.text = "Pilih lokasi"
+                        }
+                    }
+                }
+            }
         }
+
+
     }
 
     private fun getTownAndStreet(latitude: Double, longitude: Double): Pair<String?, String?> {

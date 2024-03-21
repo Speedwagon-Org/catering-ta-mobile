@@ -3,11 +3,15 @@ package com.speedwagon.cato.home.menu.profile.location
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.location.Geocoder
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.profile.location.adapter.LocationItem
+import java.io.IOException
+import java.util.Locale
 
 @Suppress("DEPRECATION")
 class DetailLocation : AppCompatActivity() {
@@ -31,13 +37,35 @@ class DetailLocation : AppCompatActivity() {
         val isDefault = findViewById<SwitchMaterial>(R.id.sw_detail_location)
         val btnAction = findViewById<FloatingActionButton>(R.id.fab_location_confirm)
         val btnDelete = findViewById<FloatingActionButton>(R.id.fab_location_delete)
+        val btnPickLocation = findViewById<Button>(R.id.btn_detail_location_pick_location)
+        val detailLocation = findViewById<TextView>(R.id.tv_detail_location_town)
 
         val auth = FirebaseAuth.getInstance()
         val currentId = auth.currentUser?.uid
         val db = FirebaseFirestore.getInstance()
         val userRef = db.collection("customer")
 
+        if (locationItem == null) {
+            detailLocation.text = "Tambah titik"
+        } else {
+            val (town, street) = getTownAndStreet(locationItem.lat, locationItem.long)
+            detailLocation.text = "$town, $street"
+        }
+
+        btnPickLocation.setOnClickListener {
+            val intent = Intent(this, LocationPicker::class.java)
+            if (locationItem != null){
+                intent.putExtra("latitude", locationItem.lat )
+                intent.putExtra("longitude", locationItem.long )
+            } else {
+                intent.putExtra("latitude", 3.5876939752586146 )
+                intent.putExtra("longitude",98.69074579547087 )
+            }
+
+            startActivityForResult(intent, REQUEST_CODE)
+        }
         if (locationItem != null){
+
             label.text = Editable.Factory.getInstance().newEditable(locationItem.label)
             detail.text = Editable.Factory.getInstance().newEditable(locationItem.description)
             isDefault.isChecked = locationItem.isDefault
@@ -46,8 +74,8 @@ class DetailLocation : AppCompatActivity() {
             }
             // Update Data
             btnAction.setOnClickListener {
-                val lat = 0.0
-                val lng = 0.0
+                val lat = locationItem.lat
+                val lng = locationItem.long
                 val geoPoint = GeoPoint(lat, lng)
                 val locationData = hashMapOf(
                     "detail" to detail.text.toString(),
@@ -125,10 +153,12 @@ class DetailLocation : AppCompatActivity() {
         } else {
             btnDelete.visibility = View.GONE
             // Add Data
+            val lat = 3.5876939752586146
+            val lng = 98.69074579547087
+            val geoPoint = GeoPoint(lat, lng)
             btnAction.setOnClickListener{
-                val lat = 0.0
-                val lng = 0.0
-                val geoPoint = GeoPoint(lat, lng)
+
+
                 val data = hashMapOf(
                     "detail" to detail.text.toString(),
                     "label" to label.text.toString(),
@@ -159,4 +189,28 @@ class DetailLocation : AppCompatActivity() {
             }
         }
     }
+    private fun getTownAndStreet(latitude: Double, longitude: Double): Pair<String?, String?> {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        var town: String? = null
+        var street: String? = null
+
+        try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val address = addresses[0]
+                    town = address.locality.removePrefix("Kecamatan").trim()
+                    street = address.thoroughfare
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return Pair(town, street)
+    }
+    companion object {
+        const val REQUEST_CODE = 100
+    }
+
 }
