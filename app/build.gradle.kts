@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.speedwagon.cato"
-        minSdk = 24
+        minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 33
         versionCode = 1
@@ -39,7 +39,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
 }
 
 dependencies {
@@ -63,17 +62,15 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage-ktx")
     implementation ("com.firebase:geofire-android:3.2.0")
     implementation ("com.firebase:geofire-android-common:3.2.0")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
     // coroutine
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // maps
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
-
-    // mapbox
-    implementation("com.mapbox.maps:android:11.2.1")
+    //implementation ("com.google.android.gms:play-services-maps:18.2.0")
+//    implementation("com.tomtom.sdk.maps:map-display:0.50.3")
+    implementation ("org.osmdroid:osmdroid-android:6.1.14")
     // retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.6.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.6.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.0.1")
+//    implementation ("com.squareup.retrofit2:retrofit:2.6.0")
+//    implementation ("com.squareup.retrofit2:converter-gson:2.6.0")
+//    implementation ("com.squareup.okhttp3:logging-interceptor:4.0.1")
 }

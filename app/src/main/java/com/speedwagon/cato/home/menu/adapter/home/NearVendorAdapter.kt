@@ -35,7 +35,7 @@ class NearVendorAdapter (private val context: Context, private val itemList: Lis
         val currentItem = itemList[position]
 
         holder.vendorNameTextView.text = currentItem.vendorName
-        holder.vendorDistanceTextView.text = currentItem.vendorDistance.toString() + " km"
+        holder.vendorDistanceTextView.text = "%.2f km".format(currentItem.vendorDistance)
         currentItem.vendorImgUrl!!.downloadUrl.addOnSuccessListener { uri  ->
             println("result $uri")
             Glide.with(context)

@@ -47,9 +47,6 @@
             android:name=".home.HomeNavigation"
             android:exported="false" />
         <activity
-            android:name=".auth.Otp"
-            android:exported="false" />
-        <activity
             android:name=".auth.Authentication"
             android:exported="true" >
             <intent-filter>
