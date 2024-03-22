@@ -1,6 +1,7 @@
 package com.speedwagon.cato.home.menu.profile.location
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -26,19 +27,28 @@ import java.util.Locale
 
 @Suppress("DEPRECATION")
 class DetailLocation : AppCompatActivity() {
+    private lateinit var label : EditText
+    private lateinit var detail : EditText
+    private lateinit var isDefault : SwitchMaterial
+    private lateinit var btnAction : FloatingActionButton
+    private lateinit var btnDelete : FloatingActionButton
+    private lateinit var btnPickLocation : Button
+    private lateinit var detailLocation : TextView
+    private var newLat : Double? = null
+    private var newLng : Double? = null
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_location)
         val locationItem = intent.getParcelableExtra<LocationItem>("data")
 
-        val label = findViewById<EditText>(R.id.et_detail_location_label)
-        val detail = findViewById<EditText>(R.id.et_detail_location_description)
-        val isDefault = findViewById<SwitchMaterial>(R.id.sw_detail_location)
-        val btnAction = findViewById<FloatingActionButton>(R.id.fab_location_confirm)
-        val btnDelete = findViewById<FloatingActionButton>(R.id.fab_location_delete)
-        val btnPickLocation = findViewById<Button>(R.id.btn_detail_location_pick_location)
-        val detailLocation = findViewById<TextView>(R.id.tv_detail_location_town)
+        label = findViewById(R.id.et_detail_location_label)
+        detail = findViewById(R.id.et_detail_location_description)
+        isDefault = findViewById(R.id.sw_detail_location)
+        btnAction = findViewById(R.id.fab_location_confirm)
+        btnDelete = findViewById(R.id.fab_location_delete)
+        btnPickLocation = findViewById(R.id.btn_detail_location_pick_location)
+        detailLocation = findViewById(R.id.tv_detail_location_town)
 
         val auth = FirebaseAuth.getInstance()
         val currentId = auth.currentUser?.uid
@@ -58,8 +68,8 @@ class DetailLocation : AppCompatActivity() {
                 intent.putExtra("latitude", locationItem.lat )
                 intent.putExtra("longitude", locationItem.long )
             } else {
-                intent.putExtra("latitude", 3.5876939752586146 )
-                intent.putExtra("longitude",98.69074579547087 )
+                intent.putExtra("latitude", 3.5952 )
+                intent.putExtra("longitude",98.6722)
             }
 
             startActivityForResult(intent, REQUEST_CODE)
@@ -74,8 +84,13 @@ class DetailLocation : AppCompatActivity() {
             }
             // Update Data
             btnAction.setOnClickListener {
-                val lat = locationItem.lat
-                val lng = locationItem.long
+                var lat = locationItem.lat
+                var lng = locationItem.long
+                if (newLat != null && newLng != null){
+                    lat = newLat!!
+                    lng = newLng!!
+                }
+
                 val geoPoint = GeoPoint(lat, lng)
                 val locationData = hashMapOf(
                     "detail" to detail.text.toString(),
@@ -153,9 +168,14 @@ class DetailLocation : AppCompatActivity() {
         } else {
             btnDelete.visibility = View.GONE
             // Add Data
-            val lat = 3.5876939752586146
-            val lng = 98.69074579547087
+            var lat = 3.5952
+            var lng = 98.6722
+            if (newLat != null && newLng != null){
+                lat = newLat!!
+                lng = newLng!!
+            }
             val geoPoint = GeoPoint(lat, lng)
+
             btnAction.setOnClickListener{
 
 
@@ -209,6 +229,19 @@ class DetailLocation : AppCompatActivity() {
 
         return Pair(town, street)
     }
+
+    @SuppressLint("SetTextI18n")
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            newLat = data?.getDoubleExtra("latitude", 0.0)
+            newLng = data?.getDoubleExtra("longitude", 0.0)
+            detailLocation.text = "${getTownAndStreet(newLat!!, newLng!!).first}, ${getTownAndStreet(newLat!!, newLng!!).second}"
+        }
+    }
+
     companion object {
         const val REQUEST_CODE = 100
     }

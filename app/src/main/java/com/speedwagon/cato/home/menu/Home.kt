@@ -3,7 +3,6 @@ package com.speedwagon.cato.home.menu
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.location.Geocoder
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -196,15 +195,9 @@ class Home : Fragment() {
         return view
     }
 
-
-
-
     private fun getTimeOfDay(): String {
-        val currentTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val currentTime =
             LocalTime.now()
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
         return when {
             currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isBefore(LocalTime.of(12, 0)) -> "Selamat Pagi"
             currentTime.isAfter(LocalTime.of(12, 0)) && currentTime.isBefore(LocalTime.of(18, 0)) -> "Selamat Siang"
@@ -240,6 +233,7 @@ class Home : Fragment() {
                                     val longitude = locationData.getGeoPoint("location")?.longitude
                                     if (latitude == null || longitude == null){
                                         tvLocation.text = "Pilih lokasi"
+
                                     } else {
                                         val (town, street) = getTownAndStreet(latitude, longitude)
                                         tvLocation.text = "$town, $street"
@@ -254,8 +248,6 @@ class Home : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun getTownAndStreet(latitude: Double, longitude: Double): Pair<String?, String?> {
@@ -331,7 +323,11 @@ class Home : Fragment() {
 
 
     private suspend fun setOrdersRecyclerView() {
-        tvOrderOnProcessAvailable.visibility = View.GONE
+        if (orders.size>0){
+            tvOrderOnProcessAvailable.visibility = View.GONE
+        } else {
+            tvOrderOnProcessAvailable.visibility = View.VISIBLE
+        }
         // On Process RecyclerView
         rvOnProcessItem.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val dataOnProcessOrders: ArrayList<OnProcessItem> = ArrayList()
