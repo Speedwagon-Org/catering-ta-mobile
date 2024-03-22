@@ -19,16 +19,30 @@
         app:layout_constraintTop_toTopOf="parent" >
 
 
+
     </org.osmdroid.views.MapView>
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_location_picker_set_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/et_location_picker_location_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/baseline_check_24"
+        android:importantForAccessibility="no" />
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/et_location_picker_location_detail"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:padding="16dp"
         android:layout_margin="16dp"
-        android:enabled="false"
         android:ems="10"
         android:inputType="text"
         android:text="Memuat Lokasi..."
@@ -41,5 +55,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         android:importantForAutofill="no"
-        tools:ignore="LabelFor" />
+        tools:ignore="HardcodedText,LabelFor" />
 </androidx.constraintlayout.widget.ConstraintLayout>
