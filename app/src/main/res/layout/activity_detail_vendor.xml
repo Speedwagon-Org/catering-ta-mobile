@@ -85,6 +85,7 @@
                                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_vendor_name" />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/tv_detail_vendor_type"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -109,7 +110,7 @@
                                 android:id="@+id/iv_detail_vendor_badge"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                app:srcCompat="@drawable/ic_vendor_badge"
+                                app:srcCompat="@drawable/baseline_check_24"
                                 tools:ignore="ContentDescription"
                                 tools:layout_editor_absoluteX="275dp"
                                 tools:layout_editor_absoluteY="120dp" />
@@ -119,6 +120,7 @@
                     </LinearLayout>
 
                     <androidx.cardview.widget.CardView
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

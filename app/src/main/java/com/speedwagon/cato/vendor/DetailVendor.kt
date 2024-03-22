@@ -12,10 +12,11 @@ import com.speedwagon.cato.vendor.adapter.DetailVendorFoodAdapter
 import com.speedwagon.cato.vendor.adapter.item.VendorFood
 
 class DetailVendor : AppCompatActivity() {
+    private lateinit var cartItemList : ArrayList<Map<String, *>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_vendor)
-
+        cartItemList = ArrayList()
         recyclerViewInit()
     }
 

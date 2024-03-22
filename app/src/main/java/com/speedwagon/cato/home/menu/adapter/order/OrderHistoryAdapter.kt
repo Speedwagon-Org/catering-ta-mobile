@@ -33,9 +33,9 @@ class OrderHistoryAdapter (private val context: Context, private val itemList: L
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
 
-        holder.foodNameTextView.text = currentItem.foodName
+        holder.foodNameTextView.text = currentItem.foodName.uppercase()
         holder.vendorNameTextView.text = currentItem.vendorName
-        holder.foodStatusTextView.text = currentItem.foodStatus
+        holder.foodStatusTextView.text = currentItem.foodStatus.uppercase()
 
         currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener {uri ->
             Glide.with(context)

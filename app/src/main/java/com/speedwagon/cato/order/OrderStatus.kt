@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -29,12 +30,14 @@ class OrderStatus : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_status)
 
+        val cbPayment = findViewById<CheckBox>(R.id.cb_order_status_waiting_payment)
         val cbConfirm = findViewById<CheckBox>(R.id.cb_order_status_confirming)
         val cbOnProcess = findViewById<CheckBox>(R.id.cb_order_status_on_process)
         val cbOnDelivery= findViewById<CheckBox>(R.id.cb_order_status_on_delivery)
         val btnInsertCts = findViewById<Button>(R.id.btn_order_status_insert_cts)
         val tvCancelOrder = findViewById<TextView>(R.id.tv_order_status_cancel_order)
         val tvStatusResult = findViewById<TextView>(R.id.tv_order_status_result)
+        val btnPayOrder = findViewById<Button>(R.id.btn_order_status_pay)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -44,6 +47,7 @@ class OrderStatus : AppCompatActivity() {
         if (userId != null && orderId != null){
 
             // STATUS :
+            //      payment       - WAITING FOR CUSTOMER PAYING FOR THE FOOD
             //      waiting       - WAITING CONFIRMATION FROM VENDOR
             //      confirm       - ORDER CONFIRMED BY VENDOR
             //      on process    - ON PROCESS
@@ -68,50 +72,80 @@ class OrderStatus : AppCompatActivity() {
                         tvCancelOrder.isEnabled = false
                         if (orderStatus == "not confirmed")
                         {
+                            tvCancelOrder.visibility = View.GONE
+                            btnPayOrder.visibility = View.GONE
+                            btnInsertCts.visibility = View.GONE
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Vendor membatalkan pesanan ini"
                         }
                         else if (orderStatus == "adm cancel"){
+                            tvCancelOrder.visibility = View.GONE
+                            btnPayOrder.visibility = View.GONE
+                            btnInsertCts.visibility = View.GONE
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Admin membatalkan pesanan ini"
                         }
                         else if (orderStatus == "canceled")
                         {
+                            tvCancelOrder.visibility = View.GONE
+                            btnPayOrder.visibility = View.GONE
+                            btnInsertCts.visibility = View.GONE
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Anda membatalkan pesanan ini"
                         }
                         else if (orderStatus == "delivered")
                         {
+                            tvCancelOrder.visibility = View.GONE
+                            btnPayOrder.visibility = View.GONE
+                            btnInsertCts.visibility = View.GONE
                             tvStatusResult.setTextColor(Color.parseColor(colors[0]))
                             cbConfirm.isChecked = true
                             cbOnProcess.isChecked = true
                             cbOnDelivery.isChecked = true
+                            cbPayment.isChecked = true
                             tvStatusResult.text = "PESANAN INI SUDAH SELESAI!"
 
                         }
                         else {
                             tvStatusResult.setTextColor(Color.parseColor(colors[1]))
-                            tvStatusResult.text = "Menunggu vendor mengkonfirmasi pesanan"
+                            tvStatusResult.text = "Menunggu pembayaran oleh anda"
 
                             tvCancelOrder.isEnabled = true
-                            if (orderStatus == "confirm"){
-                                tvStatusResult.text = "Pesanan anda telah dikonfirmasi oleh vendor"
+                            btnInsertCts.visibility = View.GONE
+
+                            if (orderStatus == "payment"){
+                                tvStatusResult.text = "Menunggu konfirmasi oleh vendor"
+                                cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 tvCancelOrder.isEnabled = false
+                                btnInsertCts.visibility = View.VISIBLE
+                                btnPayOrder.visibility = View.GONE
+
+                            }
+                            if (orderStatus == "confirm"){
+                                tvStatusResult.text = "Pesanan sedang dipersiapkan oleh vendor"
+                                cbPayment.isChecked = true
+                                cbConfirm.isChecked = true
+                                tvCancelOrder.isEnabled = false
+                                btnPayOrder.visibility = View.GONE
                             }
                             if (orderStatus == "on process"){
-                                tvStatusResult.text = "Pesanan anda sedang disiapkan oleh vendor"
+                                tvStatusResult.text = "Pesanan dalam perjalanan"
+                                cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 cbOnProcess.isChecked = true
                                 tvCancelOrder.isEnabled = false
+                                btnPayOrder.visibility = View.GONE
                             }
                             if (orderStatus == "on delivery"){
-                                tvStatusResult.text = "Pesanan anda dalam perjalanan"
+                                tvStatusResult.text = "Menunggu kode CTS"
+                                cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 cbOnProcess.isChecked = true
                                 cbOnDelivery.isChecked = true
                                 btnInsertCts.isEnabled = true
                                 tvCancelOrder.isEnabled = false
+                                btnPayOrder.visibility = View.GONE
                             }
                         }
                         btnInsertCts.setOnClickListener {
