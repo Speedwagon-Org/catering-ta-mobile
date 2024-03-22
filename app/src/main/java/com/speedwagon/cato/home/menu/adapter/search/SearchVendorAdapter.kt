@@ -38,7 +38,7 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-        holder.searchVendorDistanceTextView.text = currentItem.distance.toString() + " km"
+        holder.searchVendorDistanceTextView.text = "%.2f km".format(currentItem.distance)
         holder.searchVendorNameTextView.text = currentItem.name
         currentItem.imgUrl!!.downloadUrl.addOnSuccessListener {uri ->
             Glide.with(context)
