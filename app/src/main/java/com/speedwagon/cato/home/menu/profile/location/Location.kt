@@ -1,5 +1,6 @@
 package com.speedwagon.cato.home.menu.profile.location
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -15,23 +16,29 @@ import com.speedwagon.cato.home.menu.profile.location.adapter.LocationItem
 import com.speedwagon.cato.home.menu.profile.location.adapter.LocationsAdapter
 
 class Location : AppCompatActivity() {
+    private lateinit var rvListLocation : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
 
-        val auth = FirebaseAuth.getInstance()
-        val currentId = auth.currentUser?.uid
-        val db = FirebaseFirestore.getInstance()
-        val userRef = db.collection("customer")
-        val locations = ArrayList<LocationItem>()
-
-        val rvListLocation = findViewById<RecyclerView>(R.id.rv_location_list)
+        rvListLocation = findViewById(R.id.rv_location_list)
         val fabBtn = findViewById<FloatingActionButton>(R.id.fab_location_list)
 
         fabBtn.setOnClickListener{
             val intent = Intent(this, DetailLocation::class.java)
             startActivity(intent)
         }
+
+        loadLocations()
+    }
+
+    private fun loadLocations() {
+        val auth = FirebaseAuth.getInstance()
+        val currentId = auth.currentUser?.uid
+        val db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("customer")
+        val locations = ArrayList<LocationItem>()
+
         if (currentId != null) {
             var defaultLocationId : String
             userRef.document(currentId).get().addOnCompleteListener { userTask ->
@@ -42,7 +49,6 @@ class Location : AppCompatActivity() {
 
                         userRef.document(currentId).collection("location").get().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-
                                 val res = task.result
                                 if (res != null) {
                                     for (doc in res) {
@@ -57,7 +63,7 @@ class Location : AppCompatActivity() {
                                             )
                                         )
                                     }
-                                    rvListLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)
+                                    rvListLocation.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                                     rvListLocation.adapter = LocationsAdapter(this, locations)
                                 } else {
                                     Log.d(TAG, "No documents found")
@@ -69,6 +75,14 @@ class Location : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LocationsAdapter.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            loadLocations()
         }
     }
 }

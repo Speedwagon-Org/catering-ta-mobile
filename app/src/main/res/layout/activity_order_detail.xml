@@ -41,12 +41,24 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
-
+                <TextView
+                    android:id="@+id/tv_order_detail_location_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LABEL LOCATION"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
                 <TextView
                     android:id="@+id/tv_order_detail_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur ipsum luctus sem euismod, eget euismod lectus condimentum. Morbi sed ornare tellus, sit amet cursus quam"
+                    android:text="DETAIL"
+                    tools:ignore="HardcodedText" />
+                <TextView
+                    android:id="@+id/tv_order_detail_location_geo_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GEO POINT DETAIL"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 
@@ -70,11 +82,11 @@
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
-        <Spinner
-            android:id="@+id/sp_order_detail_type"
+        <TextView
+            android:id="@+id/tv_order_detail_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:text="Memuat..."
             android:padding="12dp" />
 
         <View

@@ -124,6 +124,8 @@ class DetailLocation : AppCompatActivity() {
                                     .addOnSuccessListener {
                                         Log.d(TAG, "DocumentSnapshot successfully updated!")
                                         Toast.makeText(this, "Lokasi telah di perbaharui", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent()
+                                        setResult(Activity.RESULT_OK, intent)
                                         finish()
                                     }
                                     .addOnFailureListener { e ->
@@ -134,6 +136,8 @@ class DetailLocation : AppCompatActivity() {
                         .setNegativeButton("Tidak", null)
                         .show()
                 } else {
+                    val intent = Intent()
+                    setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
             }
@@ -152,6 +156,8 @@ class DetailLocation : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
                                     Toast.makeText(this, "Lokasi telah dihapus", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent()
+                                    setResult(Activity.RESULT_OK, intent)
                                     finish()
                                 }
                                 .addOnFailureListener { e ->
@@ -196,7 +202,9 @@ class DetailLocation : AppCompatActivity() {
                                 .addOnSuccessListener { documentReference ->
                                 Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
                                 Toast.makeText(this, "Location Saved Successfully", Toast.LENGTH_SHORT).show()
-                                finish()
+                                    val intent = Intent()
+                                    setResult(Activity.RESULT_OK, intent)
+                                    finish()
                                 }
                                 .addOnFailureListener { e ->
                                     Log.w(TAG, "Error adding document", e)
