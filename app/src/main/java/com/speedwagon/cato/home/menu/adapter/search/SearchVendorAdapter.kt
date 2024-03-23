@@ -48,7 +48,9 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
 
         holder.searchVendorContainerCardView.setOnClickListener {
             val intent = Intent(context, DetailVendor::class.java)
-            intent.putExtra("vendor_id", currentItem.id)
+            intent.putExtra("vendorId", currentItem.id)
+            intent.putExtra("vendorName",currentItem.name)
+            intent.putExtra("vendorDistance",currentItem.distance)
 
             context.startActivity(intent)
         }

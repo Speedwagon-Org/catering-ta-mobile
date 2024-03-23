@@ -48,8 +48,9 @@ class NearVendorAdapter (private val context: Context, private val itemList: Lis
 
         holder.cardViewContainer.setOnClickListener {
             val intent = Intent(context, DetailVendor::class.java)
-            intent.putExtra(currentItem.vendorId, currentItem.vendorName)
-
+            intent.putExtra("vendorId", currentItem.vendorId)
+            intent.putExtra("vendorName",currentItem.vendorName)
+            intent.putExtra("vendorDistance",currentItem.vendorDistance)
             context.startActivity(intent)
         }
     }

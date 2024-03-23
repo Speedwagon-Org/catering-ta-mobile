@@ -1,8 +1,10 @@
 package com.speedwagon.cato.vendor.adapter
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,9 +47,15 @@ class DetailVendorFoodAdapter (private val context: Context, private val itemLis
             holder.foodNameTextView.text = currentItem.foodName
             holder.foodQtyTextView.text = currentItem.foodQty.toString()
             holder.foodPriceTextView.text = "Rp " + (currentItem.foodPrice * ((100F - currentItem.foodDiscount)/100F)).toInt().toString()
-            Glide.with(context)
-                .load(currentItem.foodImgUrl)
-                .into(holder.foodImageView)
+
+            currentItem.foodImgUrl.downloadUrl.addOnSuccessListener { uri  ->
+                println("result $uri")
+                Glide.with(context)
+                    .load(uri)
+                    .into(holder.foodImageView)
+            }.addOnFailureListener { exception ->
+                Log.e(ContentValues.TAG, "Error getting download URL", exception)
+            }
 
 
 
@@ -72,10 +80,8 @@ class DetailVendorFoodAdapter (private val context: Context, private val itemLis
 
             holder.cardViewContainer.setOnClickListener {
                 val intent = Intent(context, DetailFood::class.java)
-                intent.putExtra("foodName", currentItem.foodName)
+                intent.putExtra("foodId", currentItem.foodId)
                 intent.putExtra("foodQty", currentItem.foodQty)
-                intent.putExtra("foodImgUrl", currentItem.foodImgUrl)
-                intent.putExtra("foodPrice", currentItem.foodPrice)
 
                 context.startActivity(intent)
             }

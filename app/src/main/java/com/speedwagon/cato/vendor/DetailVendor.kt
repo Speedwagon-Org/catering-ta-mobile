@@ -1,11 +1,16 @@
 package com.speedwagon.cato.vendor
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.speedwagon.cato.R
 import com.speedwagon.cato.order.OrderDetail
 import com.speedwagon.cato.vendor.adapter.DetailVendorFoodAdapter
@@ -13,41 +18,87 @@ import com.speedwagon.cato.vendor.adapter.item.VendorFood
 
 class DetailVendor : AppCompatActivity() {
     private lateinit var cartItemList : ArrayList<Map<String, *>>
+    private lateinit var db : FirebaseFirestore
+    private lateinit var storage : FirebaseStorage
+    private lateinit var tvDistance : TextView
+    private lateinit var tvName : TextView
+    private lateinit var redirectPaymentDetail : Button
+    private lateinit var ivVendorBadge : ImageView
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_vendor)
+
+        tvDistance = findViewById(R.id.tv_detail_vendor_distance)
+        tvName = findViewById(R.id.tv_detail_vendor_name)
         cartItemList = ArrayList()
-        recyclerViewInit()
-    }
+        db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
+        ivVendorBadge = findViewById(R.id.iv_detail_vendor_badge)
 
-    private fun recyclerViewInit(){
-        val rvDetailVendorFood = findViewById<RecyclerView>(R.id.rv_detail_vendor_foods)
-        rvDetailVendorFood.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val distance : Double = intent.getDoubleExtra("vendorDistance", 0.0)
+        val vendorName : String? = intent.getStringExtra("vendorName")
 
-        val dummyDetailVendorFood = listOf(
-            VendorFood(
-                foodId = "1",
-                foodPrice = 12000,
-                foodName = "Food 1",
-                foodQty = 0,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodDiscount = 0,
-            ),
-            VendorFood(
-                foodId = "2",
-                foodPrice = 12000,
-                foodName = "Food 2",
-                foodQty = 1,
-                foodImgUrl = "https://asset.kompas.com/crops/AWXtnkYHOrbSxSggVuTs3EzQprM=/10x36:890x623/750x500/data/photo/2023/03/25/641e5ef63dea4.jpg",
-                foodDiscount = 10,
-            )
-        )
-        rvDetailVendorFood.adapter = DetailVendorFoodAdapter(this, dummyDetailVendorFood)
+        if (distance == 0.0){
+            tvDistance.text = "NOT FOUND!"
+        } else {
+            tvDistance.text = "%.2f km".format(distance)
+        }
 
-        val redirectPaymentDetail = findViewById<Button>(R.id.btn_detail_vendor_redirect_detail)
+        if (vendorName.isNullOrEmpty()) {
+            tvName.text = "NO NAME!"
+        } else {
+            tvName.text = vendorName
+        }
+
+        redirectPaymentDetail = findViewById(R.id.btn_detail_vendor_redirect_detail)
         redirectPaymentDetail.setOnClickListener {
             val intent = Intent(this, OrderDetail::class.java)
             startActivity(intent)
         }
+
+        getVendorFoods()
+    }
+
+    private fun getVendorFoods(){
+        val vendorId = intent.getStringExtra("vendorId")
+        val foodsList = ArrayList<VendorFood>()
+        if (vendorId != null){
+            val vendorRef = db.collection("vendor")
+
+            vendorRef.document(vendorId).collection("foods").get().addOnCompleteListener{ task ->
+                if (task.isSuccessful){
+                    val res = task.result
+                    if (!res.isEmpty){
+                        for (food in res.documents){
+                            val foodId = food.id
+                            val foodDiscount = food.getDouble("discount")!!
+                            val foodPrice =food.get("price")!! as Long
+                            val foodName = food.getString("name")!!
+                            val foodPhotoUrl = food.getString("photo")!!
+                            val foodRef = storage.getReferenceFromUrl(foodPhotoUrl)
+                            foodsList.add(
+                                VendorFood(
+                                    foodId = foodId,
+                                    foodDiscount = foodDiscount,
+                                    foodName = foodName,
+                                    foodImgUrl = foodRef,
+                                    foodPrice = foodPrice,
+                                    foodQty = 0
+                                )
+                            )
+                            recyclerViewInit(foodsList)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private fun recyclerViewInit(foodsList : ArrayList<VendorFood>){
+        val rvDetailVendorFood = findViewById<RecyclerView>(R.id.rv_detail_vendor_foods)
+        rvDetailVendorFood.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rvDetailVendorFood.adapter = DetailVendorFoodAdapter(this, foodsList)
+
+
     }
 }
