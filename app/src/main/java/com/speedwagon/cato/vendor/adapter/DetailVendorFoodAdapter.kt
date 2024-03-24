@@ -14,10 +14,16 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
+import com.speedwagon.cato.helper.CartManager
 import com.speedwagon.cato.vendor.adapter.item.VendorFood
 import com.speedwagon.cato.vendor.foods.DetailFood
 
-class DetailVendorFoodAdapter (private val context: Context, private val itemList: List<VendorFood>):
+class DetailVendorFoodAdapter (
+    private val context: Context,
+    private val itemList: List<VendorFood>,
+    private val vendorId : String,
+    private val cartManager: CartManager
+):
     RecyclerView.Adapter<DetailVendorFoodAdapter.ViewHolder>() {
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val cardViewContainer : CardView = itemView.findViewById(R.id.cv_item_add_container)
@@ -65,15 +71,22 @@ class DetailVendorFoodAdapter (private val context: Context, private val itemLis
             } else {
                 holder.foodDiscountTextView.visibility = View.GONE
             }
-    
+
             holder.foodBtnAdd.setOnClickListener {
+
                 currentItem.foodQty++
+                if (currentItem.foodQty-1 == 0){
+                    cartManager.addToCart(context, vendorId, currentItem.foodId, currentItem.foodQty)
+                } else {
+                    cartManager.updateCartItem(context, vendorId, currentItem.foodId, currentItem.foodQty)
+                }
                 notifyItemChanged(position)
             }
 
             holder.foodBtnSub.setOnClickListener {
                 if (currentItem.foodQty > 0) {
                     currentItem.foodQty--
+                    cartManager.updateCartItem(context, vendorId, currentItem.foodId, currentItem.foodQty)
                     notifyItemChanged(position)
                 }
             }

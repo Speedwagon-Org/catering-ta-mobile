@@ -20,7 +20,7 @@
             android:name=".home.menu.profile.information.Information"
             android:exported="false" />
         <activity
-            android:name=".payment.payment"
+            android:name=".payment.Payment"
             android:exported="false" />
         <activity
             android:name=".home.menu.profile.location.LocationPicker"
