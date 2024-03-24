@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.helper.CartManager
+import com.speedwagon.cato.helper.CurrencyConverter
 import com.speedwagon.cato.vendor.adapter.item.VendorFood
 import com.speedwagon.cato.vendor.foods.DetailFood
 
@@ -52,7 +53,8 @@ class DetailVendorFoodAdapter (
             }
             holder.foodNameTextView.text = currentItem.foodName
             holder.foodQtyTextView.text = currentItem.foodQty.toString()
-            holder.foodPriceTextView.text = "Rp " + (currentItem.foodPrice * ((100F - currentItem.foodDiscount)/100F)).toInt().toString()
+            val priceFinal :Long = (currentItem.foodPrice * (1 - currentItem.foodDiscount)).toLong()
+            holder.foodPriceTextView.text = CurrencyConverter.intToIDR(priceFinal)
 
             currentItem.foodImgUrl.downloadUrl.addOnSuccessListener { uri  ->
                 println("result $uri")
@@ -95,7 +97,6 @@ class DetailVendorFoodAdapter (
                 val intent = Intent(context, DetailFood::class.java)
                 intent.putExtra("foodId", currentItem.foodId)
                 intent.putExtra("foodQty", currentItem.foodQty)
-
                 context.startActivity(intent)
             }
         }

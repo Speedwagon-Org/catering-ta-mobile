@@ -63,4 +63,14 @@ object CartManager {
         editor.putString(KEY_CART_DATA, cartDataString)
         editor.apply()
     }
+
+    fun isCartEmpty(context: Context): Boolean {
+        val cartData = getCartData(context)
+        return cartData.isEmpty()
+    }
+
+    fun isItemInCart(context: Context, vendorId: String, foodId: String): Boolean {
+        val cartData = getCartData(context)
+        return cartData.any { it.vendorId == vendorId && it.foodId == foodId }
+    }
 }

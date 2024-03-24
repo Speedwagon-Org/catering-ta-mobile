@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.adapter.search.item.Vendor
+import com.speedwagon.cato.order.OrderDetail
 import com.speedwagon.cato.vendor.DetailVendor
 
-class SearchVendorAdapter (private val context: Context, private val itemList: List<Vendor>)
+class SearchVendorAdapter (private val context: Context, private val itemList: List<Vendor>, private val orderType : Int)
     :RecyclerView.Adapter<SearchVendorAdapter.ViewHolder>()
 {
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -47,13 +48,18 @@ class SearchVendorAdapter (private val context: Context, private val itemList: L
         }
 
         holder.searchVendorContainerCardView.setOnClickListener {
-            val intent = Intent(context, DetailVendor::class.java)
-            intent.putExtra("vendorId", currentItem.id)
-            intent.putExtra("vendorName",currentItem.name)
-            intent.putExtra("vendorDistance",currentItem.distance)
+            val intentClass = if (orderType == 1) OrderDetail::class.java else DetailVendor::class.java
+
+            val intent = Intent(context, intentClass).apply {
+                putExtra("vendorId", currentItem.id)
+                putExtra("vendorName", currentItem.name)
+                putExtra("vendorDistance", currentItem.distance)
+                putExtra("orderType", orderType)
+            }
 
             context.startActivity(intent)
         }
+
 
     }
 

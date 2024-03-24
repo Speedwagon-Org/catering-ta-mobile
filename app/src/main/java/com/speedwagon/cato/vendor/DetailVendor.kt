@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +43,7 @@ class DetailVendor : AppCompatActivity() {
 
         val distance : Double = intent.getDoubleExtra("vendorDistance", 0.0)
         val vendorName : String? = intent.getStringExtra("vendorName")
+        val vendorId = intent.getStringExtra("vendorId")
 
         if (distance == 0.0){
             tvDistance.text = "NOT FOUND!"
@@ -57,8 +59,14 @@ class DetailVendor : AppCompatActivity() {
 
         redirectPaymentDetail = findViewById(R.id.btn_detail_vendor_redirect_detail)
         redirectPaymentDetail.setOnClickListener {
-            val intent = Intent(this, OrderDetail::class.java)
-            startActivity(intent)
+            if (!cartManager.isCartEmpty(this)){
+                val intent = Intent(this, OrderDetail::class.java)
+                intent.putExtra("vendorId", vendorId)
+                intent.putExtra("orderType", 0)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Keranjang masih kosong!!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         getVendorFoods(this)
@@ -81,7 +89,6 @@ class DetailVendor : AppCompatActivity() {
                             val foodName = food.getString("name")!!
                             val foodPhotoUrl = food.getString("photo")!!
                             val foodRef = storage.getReferenceFromUrl(foodPhotoUrl)
-
                             val quantity = cartManager.getCartData(context).find { it.vendorId == vendorId && it.foodId == foodId }?.quantity ?: 0
 
                             foodsList.add(

@@ -103,7 +103,7 @@ class PesanAntarFragment : Fragment() {
                                     }
                                     vendorsProcessed++
                                     if (vendorsProcessed == vendors.size) {
-                                        rvSearchVendor.adapter = SearchVendorAdapter(requireContext(), dataVendor)
+                                        rvSearchVendor.adapter = SearchVendorAdapter(requireContext(), dataVendor, 0)
                                     }
                                 }
                             }

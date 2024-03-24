@@ -72,22 +72,71 @@
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_marginHorizontal="12dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tipe Pesanan"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_marginStart="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipe Pesanan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/tv_order_detail_type"
+            <TextView
+                android:id="@+id/tv_order_detail_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Memuat..."
+                android:paddingHorizontal="12dp"
+                android:paddingTop="12dp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_order_detail_catering_start_end_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Memuat..."
-            android:padding="12dp" />
+            android:padding="8dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rowCount="2"
+                android:columnCount="2">
+
+                <Button
+                    android:id="@+id/btn_order_detail_catering_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mulai"
+                    android:layout_marginEnd="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_order_detail_catering_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Tanggal Mulai" />
+
+                <Button
+                    android:id="@+id/btn_order_detail_catering_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selesai"/>
+
+                <TextView
+                    android:id="@+id/tv_order_detail_catering_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Tanggal selesai" />
+            </GridLayout>
+        </LinearLayout>
 
         <View
             android:id="@+id/divider4"

@@ -49,6 +49,7 @@ class DetailLocation : AppCompatActivity() {
         btnDelete = findViewById(R.id.fab_location_delete)
         btnPickLocation = findViewById(R.id.btn_detail_location_pick_location)
         detailLocation = findViewById(R.id.tv_detail_location_town)
+        val currentLocationIsDefault = isDefault.isChecked
 
         val auth = FirebaseAuth.getInstance()
         val currentId = auth.currentUser?.uid
@@ -155,10 +156,16 @@ class DetailLocation : AppCompatActivity() {
                                 .delete()
                                 .addOnSuccessListener {
                                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                                    Toast.makeText(this, "Lokasi telah dihapus", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent()
-                                    setResult(Activity.RESULT_OK, intent)
-                                    finish()
+                                    if (currentLocationIsDefault){
+                                        Toast.makeText(this, "Lokasi telah dihapus", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent()
+                                        setResult(Activity.RESULT_OK, intent)
+                                        finish()
+                                    } else {
+                                        Toast.makeText(this, "Gagal menghapus dikarenakan ini adalah lokasi utama", Toast.LENGTH_SHORT).show()
+
+                                    }
+
                                 }
                                 .addOnFailureListener { e ->
                                     Log.w(TAG, "Error deleting document", e)
