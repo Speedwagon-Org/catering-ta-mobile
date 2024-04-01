@@ -28,6 +28,7 @@ class DetailVendor : AppCompatActivity() {
     private lateinit var redirectPaymentDetail : Button
     private lateinit var ivVendorBadge : ImageView
     private lateinit var cartManager: CartManager
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,8 +85,8 @@ class DetailVendor : AppCompatActivity() {
                     if (!res.isEmpty) {
                         for (food in res.documents) {
                             val foodId = food.id
-                            val foodDiscount = food.getDouble("discount")!!
-                            val foodPrice = food.get("price")!! as Long
+                            val foodDiscount = food.getDouble("discount")!! * 100
+                            val foodPrice = food.getLong("price")!!
                             val foodName = food.getString("name")!!
                             val foodPhotoUrl = food.getString("photo")!!
                             val foodRef = storage.getReferenceFromUrl(foodPhotoUrl)

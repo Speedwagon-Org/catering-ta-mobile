@@ -53,7 +53,7 @@ class DetailVendorFoodAdapter (
             }
             holder.foodNameTextView.text = currentItem.foodName
             holder.foodQtyTextView.text = currentItem.foodQty.toString()
-            val priceFinal :Long = (currentItem.foodPrice * (1 - currentItem.foodDiscount)).toLong()
+            val priceFinal :Long = (currentItem.foodPrice * (1.0 - currentItem.foodDiscount/100)).toLong()
             holder.foodPriceTextView.text = CurrencyConverter.intToIDR(priceFinal)
 
             currentItem.foodImgUrl.downloadUrl.addOnSuccessListener { uri  ->

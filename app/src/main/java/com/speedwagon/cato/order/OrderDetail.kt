@@ -2,7 +2,6 @@ package com.speedwagon.cato.order
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
@@ -14,10 +13,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -28,13 +27,12 @@ import com.speedwagon.cato.home.menu.profile.location.DetailLocation
 import com.speedwagon.cato.home.menu.profile.location.Location
 import com.speedwagon.cato.order.adapter.OrderFoodAdapter
 import com.speedwagon.cato.order.adapter.item.OrderedFood
+import com.speedwagon.cato.payment.Payment
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
+import java.time.LocalDateTime
 import java.util.Locale
-import kotlin.math.abs
-import kotlin.math.ceil
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 
 class OrderDetail : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
@@ -50,10 +48,16 @@ class OrderDetail : AppCompatActivity() {
     private lateinit var btnEditLocation : ImageView
     private lateinit var tvTotalPrice : TextView
     private lateinit var btnSetStartCateringDate : Button
-    private lateinit var btnSetEndCateringDate : Button
     private lateinit var tvSetStartCateringDate : TextView
     private lateinit var tvSetEndCateringDate : TextView
-    private val calendar = Calendar.getInstance()
+    private lateinit var tvTotalLabel : TextView
+    private lateinit var btnContinueToPayment : Button
+    private lateinit var paymentMethod : Spinner
+    private var startDate: Long = 0
+    private var endDate: Long = 0
+    private var durationInDays : Long= 0
+    private var totalPrice : Long = 0
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_detail)
@@ -65,10 +69,13 @@ class OrderDetail : AppCompatActivity() {
         tvOrderType = findViewById(R.id.tv_order_detail_type)
         tvTotalPrice = findViewById(R.id.tv_order_detail_total_price)
         llDatePickContainer = findViewById(R.id.ll_order_detail_catering_start_end_container)
-        btnSetEndCateringDate = findViewById(R.id.btn_order_detail_catering_end_date)
         btnSetStartCateringDate = findViewById(R.id.btn_order_detail_catering_start_date)
         tvSetStartCateringDate =findViewById(R.id.tv_order_detail_catering_start_date)
         tvSetEndCateringDate =findViewById(R.id.tv_order_detail_catering_end_date)
+        tvTotalLabel = findViewById(R.id.tv_order_detail_total_label)
+        btnContinueToPayment = findViewById(R.id.btn_order_detail_continue_payment)
+        paymentMethod = findViewById(R.id.sp_order_detail_payment)
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
@@ -82,6 +89,7 @@ class OrderDetail : AppCompatActivity() {
         } else {
             tvOrderType.text = "Katering Langganan"
             llDatePickContainer.visibility = View.VISIBLE
+            btnContinueToPayment.isEnabled = false
         }
 
         btnEditLocation.setOnClickListener {
@@ -91,22 +99,89 @@ class OrderDetail : AppCompatActivity() {
         }
 
         btnSetStartCateringDate.setOnClickListener {
-            showDatePickerDialog(tvSetStartCateringDate)
+            // Set up MaterialDatePicker for date range selection
+            val builder = MaterialDatePicker.Builder.dateRangePicker()
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener { selection ->
+                // Handle the selection
+                startDate = selection.first ?: 0
+                endDate = selection.second ?: 0
+
+                // Update the TextViews to display selected dates
+                tvSetStartCateringDate.text = formatDate(startDate)
+                tvSetEndCateringDate.text = formatDate(endDate)
+                durationInDays = calculateDuration(startDate, endDate)
+                tvTotalPrice.text = CurrencyConverter.intToIDR(totalPrice * durationInDays)
+                btnContinueToPayment.isEnabled = true
+
+            }
+            // Show the date picker
+            picker.show(supportFragmentManager, picker.toString())
         }
 
-        btnSetEndCateringDate.setOnClickListener {
-            showEndDatePickerDialog(tvSetEndCateringDate)
+        btnContinueToPayment.setOnClickListener {
+            val intent = Intent(this, Payment::class.java)
+            var orderDetail : HashMap<String, *>
+            if (orderType == 0){
+                orderDetail = hashMapOf(
+                    "customer" to auth.currentUser?.uid,
+                    "order_time" to LocalDateTime.now(),
+                    "order_type" to 0,
+                    "payment_method" to "qris",
+                    "payment_status" to "pending",
+                    "status" to "payment",
+                    "total_price" to totalPrice,
+                    "vendor" to vendorId,
+                )
+
+                db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
+                    val orderId = ref.id
+                    val listFoodDetail : ArrayList<HashMap<String, *>> = arrayListOf()
+                    db.collection("vendor").document(vendorId).collection("foods").get().addOnCompleteListener {foodTask ->
+                        if(foodTask.isSuccessful){
+                            val foodData = foodTask.result
+                            for (food in foodData){
+                                listFoodDetail.add(
+                                    hashMapOf(
+                                        "name" to food.getString("name"),
+                                        "price" to food.getLong("price"),
+                                        "photo" to food.getString("photo")
+                                        // TODO : ALSO ADD DATA FOR QUANTITY INSIDE CART
+                                    )
+                                )
+                            }
+                            ref.collection("foods").add(listFoodDetail)
+                            intent.putExtra("orderId", orderId)
+                            startActivity(intent)
+                        }
+                    }
+
+                }
+            } else if (orderType == 1){
+
+            }
+
         }
         recyclerViewInit(orderType)
         spinnerInit()
         setDefaultLocation()
-
-
     }
+
+    private fun formatDate(date: Long): String {
+        val formatter = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        formatter.timeZone = TimeZone.getDefault()
+        return formatter.format(date)
+    }
+    private fun calculateDuration(startDate: Long, endDate: Long): Long {
+        val durationInMillis = endDate - startDate
+        return TimeUnit.MILLISECONDS.toDays(durationInMillis) + 1
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun recyclerViewInit(orderType: Int) {
         val rvOrderFood = findViewById<RecyclerView>(R.id.rv_order_detail_foods)
         val cartFoodData = cartManager.getCartData(this)
-        var totalPrice: Long = 0
 
         rvOrderFood.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val foodCartList = ArrayList<OrderedFood>()
@@ -164,7 +239,7 @@ class OrderDetail : AppCompatActivity() {
                                 )
 
                                 rvOrderFood.adapter = OrderFoodAdapter(this, foodCartList, orderType)
-                                tvTotalPrice.text = CurrencyConverter.intToIDR(totalPrice)
+                                tvTotalLabel.text = CurrencyConverter.intToIDR(totalPrice) + "/Hari"
                             }
                         }
                     }
@@ -179,7 +254,6 @@ class OrderDetail : AppCompatActivity() {
     }
 
     private fun spinnerInit(){
-        val paymentMethod = findViewById<Spinner>(R.id.sp_order_detail_payment)
 
         val paymentMethodAdapter = ArrayAdapter(
             this,
@@ -264,65 +338,7 @@ class OrderDetail : AppCompatActivity() {
         }
     }
 
-    private fun showDatePickerDialog(textView: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this,
-            { _, year, month, dayOfMonth ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateLabel(textView)
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
 
-    private fun showEndDatePickerDialog(textView: TextView) {
-        val startDate = calendar.time
-        val datePickerDialog = DatePickerDialog(
-            this,
-            { _, year, month, dayOfMonth ->
-                val selectedEndDate = Calendar.getInstance()
-                selectedEndDate.set(year, month, dayOfMonth)
-                val endDate = selectedEndDate.time
-
-                val daysDifference = calculateDaysDifference(startDate, endDate)
-
-                if (endDate >= startDate && daysDifference <= 30) {
-                    calendar.set(Calendar.YEAR, year)
-                    calendar.set(Calendar.MONTH, month)
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    updateLabel(textView)
-                } else {
-                    // Show error message or handle the case when the selected end date is invalid
-                    // For now, let's just display a Toast message
-                    Toast.makeText(
-                        this,
-                        "End date must be after the start date and within 30 days",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
-
-
-    private fun calculateDaysDifference(startDate: Date, endDate: Date): Long {
-        val differenceInMillis = abs(endDate.time - startDate.time)
-        return ceil(differenceInMillis.toDouble() / (1000 * 60 * 60 * 24)).toLong()
-    }
-    private fun updateLabel(textView: TextView) {
-        val format = "dd/MM/yyyy"
-        val sdf = SimpleDateFormat(format, Locale.getDefault())
-        textView.text = sdf.format(calendar.time)
-    }
     companion object {
         const val REQUEST_CODE = 100
     }

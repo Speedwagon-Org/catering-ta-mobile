@@ -146,6 +146,7 @@ class OrderStatus : AppCompatActivity() {
                                 btnInsertCts.isEnabled = true
                                 tvCancelOrder.isEnabled = false
                                 btnPayOrder.visibility = View.GONE
+                                btnInsertCts.visibility = View.VISIBLE
                             }
                         }
                         btnInsertCts.setOnClickListener {
