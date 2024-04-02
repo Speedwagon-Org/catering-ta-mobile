@@ -44,46 +44,39 @@ class Order : Fragment() {
                             val orderId = order.id
                             val orderStatus = order.getString("status")
                             val vendorId = order.getString("vendor")
-
-                            if (vendorId != null){
-                                vendorRef.document(vendorId).get().addOnCompleteListener { vendorTask ->
-                                    if (vendorTask.isSuccessful){
-                                        val vendorRes = vendorTask.result
-                                        if (vendorRes.exists()){
-                                            val vendorName = vendorRes.getString("name")
-                                            val foodsRef = vendorRef.document(vendorId).collection("foods")
-                                            foodsRef.get().addOnCompleteListener { foodsTask ->
-                                                if (foodsTask.isSuccessful){
-                                                    val foodsRes = foodsTask.result
-                                                    if (!foodsRes.isEmpty){
-                                                        var count = 0
-                                                        for (food in foodsRes){
-                                                            if (count == 0){
-                                                                val foodName = food.getString("name")
-                                                                val foodImgRef = food.getString("photo")!!
-                                                                val foodImg = fireStorage.getReferenceFromUrl(foodImgRef)
-                                                                ordersData.add(
-                                                                    OnProcessItem(
-                                                                        orderId = orderId,
-                                                                        foodName = foodName!!,
-                                                                        vendorName = vendorName!!,
-                                                                        foodStatus = orderStatus!!,
-                                                                        foodImgUrl = foodImg
-                                                                    )
-                                                                )
-                                                                recyclerViewInitialization(view, ordersData)
-                                                                count++
-                                                            } else {
-                                                                break
-                                                            }
-                                                        }
-                                                    }
+                            val orderType = order.getLong("order_type")!!
+                            orderRef.document(orderId).collection("foods").get().addOnCompleteListener {foodTask ->
+                                val foods = foodTask.result
+                                for (food in foods){
+                                    if (vendorId != null){
+                                        vendorRef.document(vendorId).get().addOnCompleteListener { vendorTask ->
+                                            if (vendorTask.isSuccessful){
+                                                val vendorRes = vendorTask.result
+                                                if (vendorRes.exists()){
+                                                    val vendorName = vendorRes.getString("name")
+                                                    val foodName = food.getString("name")
+                                                    val foodImgRef = food.getString("photo")!!
+                                                    val foodImg = fireStorage.getReferenceFromUrl(foodImgRef)
+                                                    ordersData.add(
+                                                        OnProcessItem(
+                                                            orderId = orderId,
+                                                            foodName = foodName!!,
+                                                            vendorName = vendorName!!,
+                                                            foodStatus = orderStatus!!,
+                                                            foodImgUrl = foodImg,
+                                                            orderType = orderType
+                                                        )
+                                                    )
+                                                    recyclerViewInitialization(view, ordersData)
                                                 }
                                             }
                                         }
                                     }
+                                    break
                                 }
+
                             }
+
                         }
                     }
                 }

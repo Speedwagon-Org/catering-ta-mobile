@@ -1,5 +1,6 @@
 package com.speedwagon.cato.home.menu.adapter.order
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -30,14 +31,22 @@ class OrderHistoryAdapter (private val context: Context, private val itemList: L
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-
+        var orderTypeLabel = ""
+        if (currentItem.orderType == 0L){
+            orderTypeLabel = "Pesan antar"
+        } else {
+            orderTypeLabel = "Katering"
+        }
         holder.foodNameTextView.text = currentItem.foodName.uppercase()
-        holder.vendorNameTextView.text = currentItem.vendorName
+
+        holder.vendorNameTextView.text = "${ currentItem.vendorName } ($orderTypeLabel)"
         holder.foodStatusTextView.text = currentItem.foodStatus.uppercase()
 
-        currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener {uri ->
+        currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener { uri ->
+
             Glide.with(context)
                 .load(uri)
                 .into(holder.foodImageView)

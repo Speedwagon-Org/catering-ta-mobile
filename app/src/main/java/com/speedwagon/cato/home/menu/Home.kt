@@ -109,7 +109,13 @@ class Home : Fragment() {
                         for (document in querySnapshot.documents) {
                             val orderId = document.id
                             val orderData = document.data
-                            val filterStatus = listOf("waiting", "confirm", "on process", "on delivery")
+                            val filterStatus = listOf(
+                                "payment",
+                                "waiting",
+                                "confirm",
+                                "on process",
+                                "on delivery"
+                            )
                             if (orderData?.get("customer") == currentUserId && filterStatus.contains(orderData["status"])) {
                                 val foods: ArrayList<Map<String, Any>> = ArrayList()
                                 val foodRef = orderRef.document(orderId).collection("foods")
@@ -337,6 +343,7 @@ class Home : Fragment() {
             val foodName = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["name"] as String
             val foodStatus = (order["order"] as Map<*, *>)["status"] as String
             val vendorId = (order["order"] as Map<*, *>)["vendor"] as String
+            val orderType = (order["order"] as Map<*, *>)["order_type"] as Long
             val foodImgPath = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["photo"] as String
             val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(foodImgPath)
 
@@ -350,7 +357,8 @@ class Home : Fragment() {
                     foodName = foodName,
                     foodStatus = foodStatus,
                     foodImgUrl = storageReference,
-                    vendorName = vendorName
+                    vendorName = vendorName,
+                    orderType = orderType
                 )
             )
         }
@@ -372,8 +380,6 @@ class Home : Fragment() {
 
         val L = lambda2 - lambda1
         var lambda = L
-        var sinSigma: Double
-        var cosSigma: Double
         var sigma: Double
         var cosSqAlpha: Double
         var cos2SigmaM: Double
@@ -387,10 +393,8 @@ class Home : Fragment() {
         var cosPhi: Double
         var tanU1: Double
         var tanU2: Double
-        var uSq: Double
-        var A: Double
-        var B: Double
-        var deltaSigma: Double
+        val A: Double
+        val B: Double
         val MAX_ITERATIONS = 100
         var iter = 0
 
@@ -412,11 +416,11 @@ class Home : Fragment() {
             val sinAlpha = cosU1 * cosU2 * sinLambda / sin(sigma)
             cosSqAlpha = 1 - sinAlpha * sinAlpha
             cos2SigmaM = cos(sigma) - 2 * sinU1 * sinU2 / cosSqAlpha
-            val C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
+            val c = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
             val lambdaP = lambda
-            lambda = L + (1 - C) * f * sinAlpha *
-                    (sigma + C * sin(sigma) *
-                            (cos2SigmaM + C * cos(sigma) *
+            lambda = L + (1 - c) * f * sinAlpha *
+                    (sigma + c * sin(sigma) *
+                            (cos2SigmaM + c * cos(sigma) *
                                     (-1 + 2 * cos2SigmaM * cos2SigmaM)))
         } while (abs(lambda - lambdaP) > 1e-12 && ++iter < MAX_ITERATIONS)
 
@@ -424,10 +428,10 @@ class Home : Fragment() {
             throw RuntimeException("Formula failed to converge")
         }
 
-        uSq = cosSqAlpha * (a * a - b * b) / (b * b)
+        val uSq: Double = cosSqAlpha * (a * a - b * b) / (b * b)
         A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)))
         B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)))
-        deltaSigma = B * sin(sigma) *
+        val deltaSigma: Double = B * sin(sigma) *
                 (cos2SigmaM + B / 4 *
                         (cos(sigma) * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM *
                                 (-3 + 4 * sin(sigma) * sin(sigma)) *

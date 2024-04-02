@@ -1,5 +1,6 @@
 package com.speedwagon.cato.home.menu.adapter.home
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -30,12 +31,18 @@ class OnProcessAdapter(private val context: Context, private val itemList: List<
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-
+        var orderTypeLabel = ""
+        if (currentItem.orderType == 0L){
+            orderTypeLabel = "Pesan antar"
+        } else {
+            orderTypeLabel = "Katering"
+        }
         holder.foodNameTextView.text = currentItem.foodName.uppercase()
 
-        holder.vendorNameTextView.text = currentItem.vendorName
+        holder.vendorNameTextView.text = "${ currentItem.vendorName } \n($orderTypeLabel)"
         holder.foodStatusTextView.text = currentItem.foodStatus.uppercase()
 
         currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener { uri ->

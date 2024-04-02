@@ -113,7 +113,7 @@ class OrderStatus : AppCompatActivity() {
                             tvCancelOrder.isEnabled = true
                             btnInsertCts.visibility = View.GONE
 
-                            if (orderStatus == "payment"){
+                            if (orderStatus == "waiting"){
                                 tvStatusResult.text = "Menunggu konfirmasi oleh vendor"
                                 cbPayment.isChecked = true
                                 cbConfirm.isChecked = true

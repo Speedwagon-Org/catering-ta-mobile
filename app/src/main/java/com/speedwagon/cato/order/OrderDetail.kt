@@ -13,10 +13,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -29,7 +31,7 @@ import com.speedwagon.cato.order.adapter.OrderFoodAdapter
 import com.speedwagon.cato.order.adapter.item.OrderedFood
 import com.speedwagon.cato.payment.Payment
 import java.io.IOException
-import java.time.LocalDateTime
+import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -53,6 +55,7 @@ class OrderDetail : AppCompatActivity() {
     private lateinit var tvTotalLabel : TextView
     private lateinit var btnContinueToPayment : Button
     private lateinit var paymentMethod : Spinner
+    private lateinit var foodCartList : ArrayList<OrderedFood>
     private var startDate: Long = 0
     private var endDate: Long = 0
     private var durationInDays : Long= 0
@@ -121,53 +124,136 @@ class OrderDetail : AppCompatActivity() {
         }
 
         btnContinueToPayment.setOnClickListener {
-            val intent = Intent(this, Payment::class.java)
-            var orderDetail : HashMap<String, *>
-            if (orderType == 0){
-                orderDetail = hashMapOf(
-                    "customer" to auth.currentUser?.uid,
-                    "order_time" to LocalDateTime.now(),
-                    "order_type" to 0,
-                    "payment_method" to "qris",
-                    "payment_status" to "pending",
-                    "status" to "payment",
-                    "total_price" to totalPrice,
-                    "vendor" to vendorId,
-                )
 
-                db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
-                    val orderId = ref.id
-                    val listFoodDetail : ArrayList<HashMap<String, *>> = arrayListOf()
-                    db.collection("vendor").document(vendorId).collection("foods").get().addOnCompleteListener {foodTask ->
-                        if(foodTask.isSuccessful){
-                            val foodData = foodTask.result
-                            for (food in foodData){
-                                listFoodDetail.add(
-                                    hashMapOf(
-                                        "name" to food.getString("name"),
-                                        "price" to food.getLong("price"),
-                                        "photo" to food.getString("photo")
-                                        // TODO : ALSO ADD DATA FOR QUANTITY INSIDE CART
-                                    )
-                                )
-                            }
-                            ref.collection("foods").add(listFoodDetail)
-                            intent.putExtra("orderId", orderId)
-                            startActivity(intent)
-                        }
-                    }
-
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Konfirmasi pesanan")
+                .setMessage("Apakah pesanan anda sudah benar?")
+                .setPositiveButton("Iya") { _, _ ->
+                    handleOrder(orderType)
                 }
-            } else if (orderType == 1){
-
-            }
-
+                .setNegativeButton("Tidak", null)
+                .show()
         }
         recyclerViewInit(orderType)
         spinnerInit()
         setDefaultLocation()
     }
 
+    private fun msToTimeStamp(ms : Long) : Timestamp{
+        return (Timestamp(Date(ms)))
+    }
+    private fun handleOrder(orderType : Int) {
+        val intent = Intent(this, Payment::class.java)
+        val orderDetail : HashMap<String, *>
+        val currentTime = msToTimeStamp(System.currentTimeMillis())
+
+        if (orderType == 0){
+            orderDetail = hashMapOf(
+                "customer" to auth.currentUser?.uid,
+                "order_time" to currentTime,
+                "order_type" to 0,
+                "payment_method" to "qris",
+                "payment_status" to "pending",
+                "status" to "payment",
+                "total_price" to totalPrice,
+                "vendor" to vendorId,
+            )
+            db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
+                val orderId = ref.id
+                val listFoodDetail : ArrayList<HashMap<String, *>> = arrayListOf()
+                db.collection("vendor").document(vendorId).collection("foods").get().addOnCompleteListener {foodTask ->
+                    if(foodTask.isSuccessful){
+                        val foodData = foodTask.result
+                        for (foodCart in foodCartList){
+                            for (food in foodData){
+                                if (food.id == foodCart.foodId){
+                                    listFoodDetail.add(
+                                        hashMapOf(
+                                            "name" to food.getString("name"),
+                                            "price" to food.getLong("price"),
+                                            "photo" to food.getString("photo"),
+                                            "quantity" to foodCart.foodQty.toLong()
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        val formattedList = listFoodDetail.map { map ->
+                            map.mapValues { (_, value) ->
+                                if (value is Long) {
+                                    value
+                                } else {
+                                    value.toString()
+                                }
+                            }
+                        }
+
+                        for (item in formattedList) {
+                            ref.collection("foods").add(item)
+                        }
+                        CartManager.clearCart(this)
+                        Toast.makeText(this, "YUK LANJUT BAYAR PESANAN KAMU! 😄", Toast.LENGTH_SHORT).show()
+                        intent.putExtra("orderId", orderId)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+
+            }
+        } else if (orderType == 1){
+            orderDetail = hashMapOf(
+                "customer" to auth.currentUser?.uid,
+                "order_time" to currentTime,
+                "order_type" to 1,
+                "payment_method" to "qris",
+                "payment_status" to "pending",
+                "status" to "payment",
+                "total_price" to totalPrice * calculateDuration(startDate, endDate),
+                "vendor" to vendorId,
+                "start_date" to msToTimeStamp(startDate),
+                "end_date" to msToTimeStamp(endDate),
+                "order_day_left" to calculateDuration(startDate, endDate)
+            )
+            db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
+                val orderId = ref.id
+                val listFoodDetail : ArrayList<HashMap<String, *>> = arrayListOf()
+                db.collection("vendor").document(vendorId).collection("foods").get().addOnCompleteListener {foodTask ->
+                    if(foodTask.isSuccessful){
+                        val foodData = foodTask.result
+                        for (food in foodData){
+                            if (food.getBoolean("catering_available") == true || food.getBoolean("catering_available") != null){
+                                listFoodDetail.add(
+                                    hashMapOf(
+                                        "name" to food.getString("name"),
+                                        "photo" to food.getString("photo")
+                                    )
+                                )
+                            }
+                        }
+                        val formattedList = listFoodDetail.map { map ->
+                            map.mapValues { (_, value) ->
+                                if (value is Long) {
+                                    value
+                                } else {
+                                    value.toString()
+                                }
+                            }
+                        }
+
+                        for (item in formattedList) {
+                            ref.collection("foods").add(item)
+                        }
+                        Toast.makeText(this, "YUK LANJUT BAYAR PESANAN KAMU! 😄", Toast.LENGTH_SHORT).show()
+                        intent.putExtra("orderId", orderId)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+
+            }
+        }
+    }
     private fun formatDate(date: Long): String {
         val formatter = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         formatter.timeZone = TimeZone.getDefault()
@@ -184,7 +270,7 @@ class OrderDetail : AppCompatActivity() {
         val cartFoodData = cartManager.getCartData(this)
 
         rvOrderFood.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val foodCartList = ArrayList<OrderedFood>()
+        foodCartList = ArrayList()
         val vendorRef = db.collection("vendor")
 
         if (orderType != -1) {
