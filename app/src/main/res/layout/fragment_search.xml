@@ -3,10 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.menu.Home"
-    android:orientation="vertical"
-    android:background="#EEEEEE">
+    android:orientation="vertical">
     <com.google.android.material.tabs.TabLayout
+        app:tabIndicatorColor="@color/green_2"
+        app:tabSelectedTextColor="@color/green_3"
+        android:background="@color/green_1"
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

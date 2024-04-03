@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home.menu.Home"
-    android:orientation="vertical"
-    android:background="#EEEEEE">
+    android:orientation="vertical">
 
 <!--    <SearchView-->
 <!--        android:id="@+id/sv_order_vendor"-->

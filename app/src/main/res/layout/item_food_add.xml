@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    app:cardElevation="4dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginHorizontal="8dp"
+    app:cardCornerRadius="20dp"
+    android:backgroundTint="@color/green_1"
     android:id="@+id/cv_item_add_container">
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,7 +79,8 @@
         android:id="@+id/ll_item_add_qty_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="16dp">
         <ImageView
             android:layout_margin="4dp"
             android:id="@+id/iv_item_add_min_btn"

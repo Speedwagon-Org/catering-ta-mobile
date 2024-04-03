@@ -9,14 +9,22 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_home"
+        android:background="@color/green_2"
         android:layout_width="match_parent"
+        app:itemTextColor="@color/teal"
+        app:itemActiveIndicatorStyle="@color/green_3"
+        app:itemRippleColor="@color/green_3"
+        app:itemIconSize="30dp"
         android:layout_height="70dp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
+        app:itemIconTint="@color/teal"
         app:menu="@menu/home_navigation" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_home"
         android:name="com.speedwagon.cato.home.menu.Home"

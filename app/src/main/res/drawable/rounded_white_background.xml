@@ -1,6 +1,6 @@
 <!-- res/drawable/rounded_searchview_background.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FFFFFF" /> <!-- Set the background color as needed -->
+    <solid android:color="@color/green_1" /> <!-- Set the background color as needed -->
     <corners android:radius="100dp" /> <!-- Adjust the radius to control the corner roundness -->
     <padding android:bottom="8dp" android:left="8dp" android:right="8dp" android:top="8dp"/>
 </shape>

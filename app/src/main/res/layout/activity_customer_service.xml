@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home.menu.profile.information.Information"
-    android:padding="16dp"
-    android:layout_marginTop="16dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="48dp"
     android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
             android:layout_height="35dp"
             app:srcCompat="@drawable/baseline_email_24"
             android:layout_weight="1"
-            android:layout_width="0dp"/>
+            android:layout_width="0dp"
+            app:tint="@color/green_3" />
 
         <TextView
             android:layout_width="250dp"
@@ -50,6 +51,7 @@
             android:layout_height="35dp"
             app:srcCompat="@drawable/baseline_call_24"
             android:layout_weight="1"
+            app:tint="@color/green_3"
             android:layout_width="0dp"/>
 
         <TextView
@@ -71,8 +73,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_weight="2"
+        android:fontFamily="@font/josefinsans_bold"
         android:text="Term and Condition " />
     <TextView
         android:layout_width="match_parent"
