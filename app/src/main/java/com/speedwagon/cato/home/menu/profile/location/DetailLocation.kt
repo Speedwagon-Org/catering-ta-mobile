@@ -156,7 +156,7 @@ class DetailLocation : AppCompatActivity() {
                                 .delete()
                                 .addOnSuccessListener {
                                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                                    if (currentLocationIsDefault){
+                                    if (!currentLocationIsDefault){
                                         Toast.makeText(this, "Lokasi telah dihapus", Toast.LENGTH_SHORT).show()
                                         val intent = Intent()
                                         setResult(Activity.RESULT_OK, intent)

@@ -157,6 +157,7 @@ class OrderDetail : AppCompatActivity() {
                 "status" to "payment",
                 "total_price" to totalPrice,
                 "vendor" to vendorId,
+                "cts" to "00000"
             )
             db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
                 val orderId = ref.id
@@ -213,7 +214,8 @@ class OrderDetail : AppCompatActivity() {
                 "vendor" to vendorId,
                 "start_date" to msToTimeStamp(startDate),
                 "end_date" to msToTimeStamp(endDate),
-                "order_day_left" to calculateDuration(startDate, endDate)
+                "order_day_left" to calculateDuration(startDate, endDate),
+                "cts" to "00000"
             )
             db.collection("orders").add(orderDetail).addOnSuccessListener {ref ->
                 val orderId = ref.id

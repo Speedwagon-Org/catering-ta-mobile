@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.speedwagon.cato.R
 import com.speedwagon.cato.auth.Authentication
 import com.speedwagon.cato.home.menu.Home
+import com.speedwagon.cato.payment.Payment
 
 class OrderStatus : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
@@ -44,6 +45,11 @@ class OrderStatus : AppCompatActivity() {
         val userId = auth.currentUser?.uid
         val orderId = intent.getStringExtra("orderId")
 
+        btnPayOrder.setOnClickListener{
+            val intent = Intent(this, Payment::class.java)
+            intent.putExtra("orderId", orderId)
+            startActivity(intent)
+        }
         if (userId != null && orderId != null){
 
             // STATUS :
@@ -116,21 +122,19 @@ class OrderStatus : AppCompatActivity() {
                             if (orderStatus == "waiting"){
                                 tvStatusResult.text = "Menunggu konfirmasi oleh vendor"
                                 cbPayment.isChecked = true
-                                cbConfirm.isChecked = true
-                                tvCancelOrder.isEnabled = false
                                 btnInsertCts.visibility = View.VISIBLE
                                 btnPayOrder.visibility = View.GONE
 
                             }
                             if (orderStatus == "confirm"){
-                                tvStatusResult.text = "Pesanan sedang dipersiapkan oleh vendor"
+                                tvStatusResult.text = "Pesanan telah dikonfirmasi oleh vendor"
                                 cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 tvCancelOrder.isEnabled = false
                                 btnPayOrder.visibility = View.GONE
                             }
                             if (orderStatus == "on process"){
-                                tvStatusResult.text = "Pesanan dalam perjalanan"
+                                tvStatusResult.text = "Pesanan sedang dipersiapkan"
                                 cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 cbOnProcess.isChecked = true
@@ -138,7 +142,7 @@ class OrderStatus : AppCompatActivity() {
                                 btnPayOrder.visibility = View.GONE
                             }
                             if (orderStatus == "on delivery"){
-                                tvStatusResult.text = "Menunggu kode CTS"
+                                tvStatusResult.text = "Pesanan sedang dalam perjalanan"
                                 cbPayment.isChecked = true
                                 cbConfirm.isChecked = true
                                 cbOnProcess.isChecked = true
@@ -205,7 +209,7 @@ class OrderStatus : AppCompatActivity() {
             finish()
         }
     }
-    fun showCtsInsertDialog(context: Context, callback: (String) -> Unit) {
+    private fun showCtsInsertDialog(context: Context, callback: (String) -> Unit) {
         val inputEditText = EditText(context)
 
         val dialog = AlertDialog.Builder(context)
@@ -223,7 +227,7 @@ class OrderStatus : AppCompatActivity() {
 
         dialog.show()
     }
-    fun restartActivity() {
+    private fun restartActivity() {
         val intent = intent
         finish()
         startActivity(intent)

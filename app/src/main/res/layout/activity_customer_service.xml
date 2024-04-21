@@ -29,7 +29,7 @@
             app:srcCompat="@drawable/baseline_email_24"
             android:layout_weight="1"
             android:layout_width="0dp"
-            app:tint="@color/green_3" />
+            app:tint="@color/green_2" />
 
         <TextView
             android:layout_width="250dp"
@@ -51,7 +51,7 @@
             android:layout_height="35dp"
             app:srcCompat="@drawable/baseline_call_24"
             android:layout_weight="1"
-            app:tint="@color/green_3"
+            app:tint="@color/green_2"
             android:layout_width="0dp"/>
 
         <TextView

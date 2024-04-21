@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         app:itemTextColor="@color/teal"
         app:itemActiveIndicatorStyle="@color/green_3"
-        app:itemRippleColor="@color/green_3"
+        app:itemRippleColor="@null"
         app:itemIconSize="30dp"
         android:layout_height="70dp"
         android:textAlignment="center"
