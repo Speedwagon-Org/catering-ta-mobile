@@ -80,31 +80,70 @@ class KateringFragment : Fragment() {
                     val res = customerTask.result
                     if (res != null) {
                         val locationDefaultId = res.getString("default_location")!!
-                        val locationRef = userRef.document(auth.currentUser!!.uid).collection("location")
-                        locationRef.document(locationDefaultId).get().addOnCompleteListener { userLocationTask ->
-                            if (userLocationTask.isSuccessful) {
-                                val userLocationRes = userLocationTask.result
-                                if (userLocationRes != null) {
-                                    val customerLat = userLocationRes.getGeoPoint("location")!!.latitude
-                                    val customerLng = userLocationRes.getGeoPoint("location")!!.longitude
-                                    val distance = vincentyDistance(lat1 = customerLat, lat2 = vendorLat, lon1 = customerLng, lon2 = vendorLng)
-
-                                    if (distance <= 15.0 && isAvailableCatering) {
-                                        dataVendor.add(
-                                            Vendor(
-                                               id = id,
-                                               name = name,
-                                               distance = distance,
-                                               imgUrl = storageReference
+                        if (locationDefaultId != "NY5lLQOlI76B3x923WzE") {
+                            val locationRef =
+                                userRef.document(auth.currentUser!!.uid).collection("location")
+                            locationRef.document(locationDefaultId).get()
+                                .addOnCompleteListener { userLocationTask ->
+                                    if (userLocationTask.isSuccessful) {
+                                        val userLocationRes = userLocationTask.result
+                                        if (userLocationRes != null) {
+                                            val customerLat =
+                                                userLocationRes.getGeoPoint("location")!!.latitude
+                                            val customerLng =
+                                                userLocationRes.getGeoPoint("location")!!.longitude
+                                            val distance = vincentyDistance(
+                                                lat1 = customerLat,
+                                                lat2 = vendorLat,
+                                                lon1 = customerLng,
+                                                lon2 = vendorLng
                                             )
-                                        )
 
-                                    }
-                                    vendorsProcessed++
-                                    if (vendorsProcessed == vendors.size) {
-                                        rvSearchVendor.adapter = SearchVendorAdapter(requireContext(), dataVendor, 1)
+                                            if (distance <= 15.0 && isAvailableCatering) {
+                                                dataVendor.add(
+                                                    Vendor(
+                                                        id = id,
+                                                        name = name,
+                                                        distance = distance,
+                                                        imgUrl = storageReference
+                                                    )
+                                                )
+
+                                            }
+                                            vendorsProcessed++
+                                            if (vendorsProcessed == vendors.size) {
+                                                rvSearchVendor.adapter = SearchVendorAdapter(
+                                                    requireContext(),
+                                                    dataVendor,
+                                                    1
+                                                )
+                                            }
+                                        }
                                     }
                                 }
+                        } else {
+                            val customerLat = 3.581219932992454
+                            val customerLng = 98.68931937842501
+                            val distance = vincentyDistance(lat1 = customerLat, lat2 = vendorLat, lon1 = customerLng, lon2 = vendorLng)
+
+                            if (distance <= 15.0) {
+                                dataVendor.add(
+                                    Vendor(
+                                        id = id,
+                                        name = name,
+                                        distance = distance,
+                                        imgUrl = storageReference
+                                    )
+                                )
+                            }
+
+                            vendorsProcessed++
+                            if (vendorsProcessed == vendors.size) {
+                                rvSearchVendor.adapter = SearchVendorAdapter(
+                                    requireContext(),
+                                    dataVendor,
+                                    0
+                                )
                             }
                         }
 

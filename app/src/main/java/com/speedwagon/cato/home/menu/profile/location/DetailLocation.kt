@@ -17,9 +17,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Query
 import com.speedwagon.cato.R
 import com.speedwagon.cato.home.menu.profile.location.adapter.LocationItem
 import java.io.IOException
@@ -75,6 +77,7 @@ class DetailLocation : AppCompatActivity() {
 
             startActivityForResult(intent, REQUEST_CODE)
         }
+
         if (locationItem != null){
 
             label.text = Editable.Factory.getInstance().newEditable(locationItem.label)
@@ -96,7 +99,8 @@ class DetailLocation : AppCompatActivity() {
                 val locationData = hashMapOf(
                     "detail" to detail.text.toString(),
                     "label" to label.text.toString(),
-                    "location" to geoPoint
+                    "location" to geoPoint,
+                    "timestamp" to Timestamp.now()
                 )
                 var defaultLocation : Map<String, Any> = hashMapOf()
                 if (isDefault.isChecked){
@@ -163,7 +167,6 @@ class DetailLocation : AppCompatActivity() {
                                         finish()
                                     } else {
                                         Toast.makeText(this, "Gagal menghapus dikarenakan ini adalah lokasi utama", Toast.LENGTH_SHORT).show()
-
                                     }
 
                                 }
@@ -189,16 +192,22 @@ class DetailLocation : AppCompatActivity() {
             }
             val geoPoint = GeoPoint(lat, lng)
 
+            userRef.document(currentId!!).collection("location").get().addOnSuccessListener {task ->
+                if (task.isEmpty){
+                    isDefault.isClickable = false
+                    isDefault.isChecked = true
+                }
+            }
+
             btnAction.setOnClickListener{
-
-
                 val data = hashMapOf(
                     "detail" to detail.text.toString(),
                     "label" to label.text.toString(),
-                    "location" to geoPoint
+                    "location" to geoPoint,
+                    "timestamp" to Timestamp.now()
                 )
 
-                if (detail.text.isNotEmpty() && label.text.isNotEmpty() && currentId != null){
+                if (detail.text.isNotEmpty() && label.text.isNotEmpty()){
 
                     AlertDialog.Builder(this)
                         .setTitle("Logout")
@@ -207,8 +216,33 @@ class DetailLocation : AppCompatActivity() {
                             Log.d(TAG, "Notice : Trying to write data")
                             userRef.document(currentId).collection("location").add(data)
                                 .addOnSuccessListener { documentReference ->
-                                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                                Toast.makeText(this, "Location Saved Successfully", Toast.LENGTH_SHORT).show()
+                                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                                    Toast.makeText(this, "Location Saved Successfully ${isDefault.isChecked}", Toast.LENGTH_SHORT).show()
+
+                                    if (isDefault.isChecked){
+                                        val latestLocationAdded = userRef.document(currentId).collection("location")
+                                        latestLocationAdded
+                                            .orderBy("timestamp", Query.Direction.DESCENDING)
+                                            .limit(1)
+                                            .get()
+                                            .addOnSuccessListener  {latestLocation ->
+                                                if (!latestLocation.isEmpty) {
+                                                    for (loc in latestLocation) {
+                                                        val locationId = loc.id
+                                                        userRef.document(currentId).update(mapOf("default_location" to locationId))
+                                                            .addOnSuccessListener {
+                                                                Log.d(TAG, "Default location successfully updated to: $locationId")
+                                                            }
+                                                            .addOnFailureListener { e ->
+                                                                Log.w(TAG, "Failed to update default location", e)
+                                                            }
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "No latest location found")
+                                                }
+                                            }
+                                    }
+
                                     val intent = Intent()
                                     setResult(Activity.RESULT_OK, intent)
                                     finish()
@@ -219,7 +253,6 @@ class DetailLocation : AppCompatActivity() {
                         }
                         .setNegativeButton("Tidak", null)
                         .show()
-
                 }
             }
         }
