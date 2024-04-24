@@ -34,16 +34,31 @@ class OnProcessAdapter(private val context: Context, private val itemList: List<
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = itemList[position]
-        var orderTypeLabel = ""
+        val orderTypeLabel: String
+        var orderFoodStatus = ""
+        val cateringDayLeft = if (currentItem.orderDayLeft == null || currentItem.orderDayLeft == 0L){
+            ""
+        }
+        else {
+            "(${currentItem.orderDayLeft} Hari lagi)"
+        }
+
         if (currentItem.orderType == 0L){
-            orderTypeLabel = "Pesan antar"
+            orderTypeLabel= "Pesan antar"
+            orderFoodStatus = currentItem.foodStatus.capitalize()
         } else {
             orderTypeLabel = "Katering"
+            if (currentItem.orderDayLeft!!.toLong() > 0L && currentItem.foodStatus == "delivered"){
+                orderFoodStatus = "Pesanan hari ini selesai"
+            } else {
+                orderFoodStatus = currentItem.foodStatus.capitalize()
+            }
         }
+
         holder.foodNameTextView.text = currentItem.foodName.uppercase()
 
-        holder.vendorNameTextView.text = "${ currentItem.vendorName } \n($orderTypeLabel)"
-        holder.foodStatusTextView.text = currentItem.foodStatus.uppercase()
+        holder.vendorNameTextView.text = "${currentItem.vendorName } ($orderTypeLabel)"
+        holder.foodStatusTextView.text = "$orderFoodStatus $cateringDayLeft"
 
         currentItem.foodImgUrl?.downloadUrl?.addOnSuccessListener { uri ->
 

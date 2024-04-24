@@ -45,6 +45,11 @@ class Order : Fragment() {
                             val orderStatus = order.getString("status")
                             val vendorId = order.getString("vendor")
                             val orderType = order.getLong("order_type")!!
+                            val dayLeft = if (order.getLong("order_type")==1L) {
+                                order.getLong("order_day_left")
+                            } else {
+                                null
+                            }
                             orderRef.document(orderId).collection("foods").get().addOnCompleteListener {foodTask ->
                                 val foods = foodTask.result
                                 for (food in foods){
@@ -64,7 +69,8 @@ class Order : Fragment() {
                                                             vendorName = vendorName!!,
                                                             foodStatus = orderStatus!!,
                                                             foodImgUrl = foodImg,
-                                                            orderType = orderType
+                                                            orderType = orderType,
+                                                            orderDayLeft = dayLeft
                                                         )
                                                     )
                                                     recyclerViewInitialization(view, ordersData)
@@ -97,34 +103,4 @@ class Order : Fragment() {
         rvOrderHistory.adapter = OrderHistoryAdapter(requireContext(), ordersData)
 
     }
-
-//            listOf(
-//            OnProcessItem(
-//                orderId = "10",
-//                foodName = "Food 1",
-//                vendorName = "Vendor 1",
-//                foodStatus = "On Proess",
-//                foodImgUrl = null
-//            ),
-//            OnProcessItem(
-//                orderId = "20",
-//                foodName = "Food 2",
-//                vendorName = "Vendor 2",
-//                foodStatus = "On Proess",
-//                foodImgUrl = null
-//            )
-//        )
-//    private fun spinnerInitialization(view : View){
-//        spFilterStatus = view.findViewById(R.id.sp_order_status_filter)
-//        val statusFilterAdapter = ArrayAdapter(
-//            requireContext(),
-//            android.R.layout.simple_spinner_dropdown_item,
-//            resources.getStringArray(R.array.status_filter)
-//        )
-//        statusFilterAdapter.setDropDownViewResource(
-//            android.R.layout.simple_spinner_dropdown_item
-//        )
-//
-//        spFilterStatus.adapter = statusFilterAdapter
-//    }
 }

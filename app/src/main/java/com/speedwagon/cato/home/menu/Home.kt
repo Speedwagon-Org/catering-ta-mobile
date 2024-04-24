@@ -116,7 +116,12 @@ class Home : Fragment() {
                                 "on process",
                                 "on delivery"
                             )
-                            if (orderData?.get("customer") == currentUserId && filterStatus.contains(orderData["status"])) {
+
+                            var dayLeft = 0L
+                            if (orderData!!["order_type"] == 1L){
+                                dayLeft = orderData["order_day_left"] as Long
+                            }
+                            if (orderData["customer"] as String == currentUserId && filterStatus.contains(orderData["status"]) || dayLeft > 0) {
                                 val foods: ArrayList<Map<String, Any>> = ArrayList()
                                 val foodRef = orderRef.document(orderId).collection("foods")
                                 val foodPromise = foodRef.get()
@@ -346,7 +351,11 @@ class Home : Fragment() {
             val orderType = (order["order"] as Map<*, *>)["order_type"] as Long
             val foodImgPath = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["photo"] as String
             val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(foodImgPath)
-
+            val dayLeft = if (orderType==1L) {
+                (order["order"] as Map<*, *>)["order_day_left"] as Long
+            } else {
+                null
+            }
             val vendorName = withContext(Dispatchers.IO) {
                 getVendor(vendorId)
             }
@@ -358,7 +367,8 @@ class Home : Fragment() {
                     foodStatus = foodStatus,
                     foodImgUrl = storageReference,
                     vendorName = vendorName,
-                    orderType = orderType
+                    orderType = orderType,
+                    orderDayLeft = dayLeft
                 )
             )
         }

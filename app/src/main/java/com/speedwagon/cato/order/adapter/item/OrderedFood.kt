@@ -7,5 +7,5 @@ data class OrderedFood(
     val foodName: String,
     val foodPrice: Long,
     val foodPictUrl: StorageReference,
-    val foodQty: Int,
+    val foodQty: Long,
 )

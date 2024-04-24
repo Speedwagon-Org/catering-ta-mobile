@@ -173,7 +173,7 @@ class OrderDetail : AppCompatActivity() {
                                             "name" to food.getString("name"),
                                             "price" to food.getLong("price"),
                                             "photo" to food.getString("photo"),
-                                            "quantity" to foodCart.foodQty.toLong()
+                                            "quantity" to foodCart.foodQty
                                         )
                                     )
                                 }
@@ -224,7 +224,8 @@ class OrderDetail : AppCompatActivity() {
                     if(foodTask.isSuccessful){
                         val foodData = foodTask.result
                         for (food in foodData){
-                            if (food.getBoolean("catering_available") == true || food.getBoolean("catering_available") != null){
+                            val foodAvailableCatering = food.getBoolean("catering_available") ?: false
+                            if (foodAvailableCatering){
                                 listFoodDetail.add(
                                     hashMapOf(
                                         "name" to food.getString("name"),
@@ -301,7 +302,7 @@ class OrderDetail : AppCompatActivity() {
                                     foodName = foodName,
                                     foodPrice = finalPrice.toLong(),
                                     foodPictUrl = foodImgRef,
-                                    foodQty = foodQty
+                                    foodQty = foodQty.toLong()
                                 )
                             )
                         }

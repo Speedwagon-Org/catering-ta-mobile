@@ -15,17 +15,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.speedwagon.cato.R
 import com.speedwagon.cato.auth.Authentication
+import com.speedwagon.cato.helper.CurrencyConverter
 import com.speedwagon.cato.home.menu.Home
+import com.speedwagon.cato.order.adapter.OrderFoodAdapter
+import com.speedwagon.cato.order.adapter.item.OrderedFood
 import com.speedwagon.cato.payment.Payment
 
 class OrderStatus : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var db : FirebaseFirestore
-
+    private lateinit var storage: FirebaseStorage
+    private lateinit var foodList : ArrayList<OrderedFood>
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +46,12 @@ class OrderStatus : AppCompatActivity() {
         val tvCancelOrder = findViewById<TextView>(R.id.tv_order_status_cancel_order)
         val tvStatusResult = findViewById<TextView>(R.id.tv_order_status_result)
         val btnPayOrder = findViewById<Button>(R.id.btn_order_status_pay)
+        val tvTotalPrice = findViewById<TextView>(R.id.tv_order_status_total_price)
+        val tvDayLeft = findViewById<TextView>(R.id.tv_order_status_catering_days_left)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
         val userId = auth.currentUser?.uid
         val orderId = intent.getStringExtra("orderId")
 
@@ -64,6 +74,9 @@ class OrderStatus : AppCompatActivity() {
             //      not confirmed - ORDER IS NOT ACCEPTED BY VENDOR
             //      canceled      - CANCELLED BY CUSTOMER
             //      adm cancel    - CANCELLED BY ADMIN
+            val rvListMakanan = findViewById<RecyclerView>(R.id.rv_order_status_list_makanan)
+            foodList  = ArrayList()
+            rvListMakanan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
             val orderRef = db.collection("orders")
             orderRef.document(orderId).get().addOnCompleteListener { task ->
@@ -73,6 +86,49 @@ class OrderStatus : AppCompatActivity() {
                         val orderStatus = res.getString("status")
                         val orderCtsCode = res.getString("cts")
                         val colors = listOf ("#5cb85c", "#bab12d", "#ba2d2d")
+                        val orderType = res.getLong("order_type")
+                        val orderDaysLeft = res.getLong("order_day_left")
+                        val orderTotalPrice = res.getLong("total_price")
+                        tvTotalPrice.text = CurrencyConverter.intToIDR(orderTotalPrice!!)
+                        if (orderType == 0L){
+                            tvDayLeft.visibility = View.GONE
+                        } else {
+                            tvDayLeft.text = "Sisa $orderDaysLeft Hari"
+                        }
+                        orderRef.document(orderId).collection("foods").get().addOnCompleteListener { foodsTask ->
+                            if (foodsTask.isSuccessful){
+                                val foodRes = foodsTask.result
+                                if (!foodRes.isEmpty) {
+                                    for (food in foodRes){
+                                        if (orderType == 0L ){
+                                            val photoRef = storage.getReferenceFromUrl(food.getString("photo")!!)
+                                            foodList.add(
+                                                OrderedFood(
+                                                    foodId = food.id,
+                                                    foodName = food.getString("name")!!.capitalize(),
+                                                    foodPrice = food.getLong("price")!!,
+                                                    foodPictUrl = photoRef,
+                                                    foodQty = food.getLong("quantity")!!
+                                                )
+                                            )
+                                        } else if (orderType == 1L){
+                                            val photoRef = storage.getReferenceFromUrl(food.getString("photo")!!)
+                                            foodList.add(
+                                                OrderedFood(
+                                                    foodId = food.id,
+                                                    foodName = food.getString("name")!!.capitalize(),
+                                                    foodPrice = 0,
+                                                    foodPictUrl = photoRef,
+                                                    foodQty = 0
+                                                )
+                                            )
+                                        }
+
+                                        rvListMakanan.adapter = OrderFoodAdapter(this, foodList, orderType!!.toInt())
+                                    }
+                                }
+                            }
+                        }
 
                         btnInsertCts.isEnabled = false
                         tvCancelOrder.isEnabled = false
@@ -80,14 +136,16 @@ class OrderStatus : AppCompatActivity() {
                         {
                             tvCancelOrder.visibility = View.GONE
                             btnPayOrder.visibility = View.GONE
-                            btnInsertCts.visibility = View.GONE
+                            btnInsertCts.visibility = View.VISIBLE
+                            btnInsertCts.isEnabled = false
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Vendor membatalkan pesanan ini"
                         }
                         else if (orderStatus == "adm cancel"){
                             tvCancelOrder.visibility = View.GONE
                             btnPayOrder.visibility = View.GONE
-                            btnInsertCts.visibility = View.GONE
+                            btnInsertCts.visibility = View.VISIBLE
+                            btnInsertCts.isEnabled = false
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Admin membatalkan pesanan ini"
                         }
@@ -95,7 +153,8 @@ class OrderStatus : AppCompatActivity() {
                         {
                             tvCancelOrder.visibility = View.GONE
                             btnPayOrder.visibility = View.GONE
-                            btnInsertCts.visibility = View.GONE
+                            btnInsertCts.visibility = View.VISIBLE
+                            btnInsertCts.isEnabled = false
                             tvStatusResult.setTextColor(Color.parseColor(colors[2]))
                             tvStatusResult.text = "Anda membatalkan pesanan ini"
                         }
@@ -103,13 +162,19 @@ class OrderStatus : AppCompatActivity() {
                         {
                             tvCancelOrder.visibility = View.GONE
                             btnPayOrder.visibility = View.GONE
-                            btnInsertCts.visibility = View.GONE
+                            btnInsertCts.visibility = View.VISIBLE
                             tvStatusResult.setTextColor(Color.parseColor(colors[0]))
                             cbConfirm.isChecked = true
                             cbOnProcess.isChecked = true
                             cbOnDelivery.isChecked = true
                             cbPayment.isChecked = true
-                            tvStatusResult.text = "PESANAN INI SUDAH SELESAI!"
+                            btnInsertCts.isEnabled = false
+                            if (orderType == 1L && orderDaysLeft!! > 0){
+                                tvStatusResult.text = "Tunggu toko untuk mempersiapkan makanan besok"
+                            }
+                            if (orderType == 0L || orderDaysLeft == null || orderDaysLeft == 0L){
+                                tvStatusResult.text = "Pesanan sudah selesai!"
+                            }
 
                         }
                         else {
@@ -132,6 +197,7 @@ class OrderStatus : AppCompatActivity() {
                                 cbConfirm.isChecked = true
                                 tvCancelOrder.isEnabled = false
                                 btnPayOrder.visibility = View.GONE
+                                btnInsertCts.visibility = View.VISIBLE
                             }
                             if (orderStatus == "on process"){
                                 tvStatusResult.text = "Pesanan sedang dipersiapkan"
@@ -140,6 +206,7 @@ class OrderStatus : AppCompatActivity() {
                                 cbOnProcess.isChecked = true
                                 tvCancelOrder.isEnabled = false
                                 btnPayOrder.visibility = View.GONE
+                                btnInsertCts.visibility = View.VISIBLE
                             }
                             if (orderStatus == "on delivery"){
                                 tvStatusResult.text = "Pesanan sedang dalam perjalanan"
@@ -147,10 +214,10 @@ class OrderStatus : AppCompatActivity() {
                                 cbConfirm.isChecked = true
                                 cbOnProcess.isChecked = true
                                 cbOnDelivery.isChecked = true
-                                btnInsertCts.isEnabled = true
                                 tvCancelOrder.isEnabled = false
                                 btnPayOrder.visibility = View.GONE
                                 btnInsertCts.visibility = View.VISIBLE
+                                btnInsertCts.isEnabled = true
                             }
                         }
                         btnInsertCts.setOnClickListener {
