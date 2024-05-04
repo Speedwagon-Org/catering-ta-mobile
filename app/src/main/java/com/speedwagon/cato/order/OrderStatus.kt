@@ -102,13 +102,17 @@ class OrderStatus : AppCompatActivity() {
                                     for (food in foodRes){
                                         if (orderType == 0L ){
                                             val photoRef = storage.getReferenceFromUrl(food.getString("photo")!!)
+                                            val discount = food.getDouble("discount")!!
+                                            val qty = food.getLong("quantity")!!
+                                            val price = (food.getLong("price")!! * qty * (1.0 - discount)).toLong()
                                             foodList.add(
                                                 OrderedFood(
                                                     foodId = food.id,
                                                     foodName = food.getString("name")!!.capitalize(),
-                                                    foodPrice = food.getLong("price")!!,
+                                                    foodPrice = price,
                                                     foodPictUrl = photoRef,
-                                                    foodQty = food.getLong("quantity")!!
+                                                    foodQty = qty,
+                                                    foodDiscount = discount
                                                 )
                                             )
                                         } else if (orderType == 1L){
@@ -119,7 +123,8 @@ class OrderStatus : AppCompatActivity() {
                                                     foodName = food.getString("name")!!.capitalize(),
                                                     foodPrice = 0,
                                                     foodPictUrl = photoRef,
-                                                    foodQty = 0
+                                                    foodQty = 0,
+                                                    foodDiscount = 1.0
                                                 )
                                             )
                                         }

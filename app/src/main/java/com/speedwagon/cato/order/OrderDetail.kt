@@ -173,6 +173,7 @@ class OrderDetail : AppCompatActivity() {
                                             "name" to food.getString("name"),
                                             "price" to food.getLong("price"),
                                             "photo" to food.getString("photo"),
+                                            "discount" to food.getDouble("discount") as Double,
                                             "quantity" to foodCart.foodQty
                                         )
                                     )
@@ -182,9 +183,10 @@ class OrderDetail : AppCompatActivity() {
 
                         val formattedList = listFoodDetail.map { map ->
                             map.mapValues { (_, value) ->
-                                if (value is Long) {
+                                if (value is Long || value is Double) {
                                     value
-                                } else {
+                                }
+                                else {
                                     value.toString()
                                 }
                             }
@@ -289,8 +291,8 @@ class OrderDetail : AppCompatActivity() {
 
                             val foodName = food.getString("name")!!
                             val foodQty = cartFood?.quantity ?: 0
-                            val foodPrice = food.getDouble("price")!!
                             val foodDiscount = food.getDouble("discount")!!
+                            val foodPrice = food.getDouble("price")!!
                             val finalPrice = foodPrice * foodQty * (1 - foodDiscount)
                             val foodImg = food.getString("photo")!!
                             val foodImgRef = storage.getReferenceFromUrl(foodImg)
@@ -302,7 +304,8 @@ class OrderDetail : AppCompatActivity() {
                                     foodName = foodName,
                                     foodPrice = finalPrice.toLong(),
                                     foodPictUrl = foodImgRef,
-                                    foodQty = foodQty.toLong()
+                                    foodQty = foodQty.toLong(),
+                                    foodDiscount = foodDiscount
                                 )
                             )
                         }
@@ -313,7 +316,6 @@ class OrderDetail : AppCompatActivity() {
                             val foodName = food.getString("name")!!
                             val foodImg = food.getString("photo")!!
                             val foodImgRef = storage.getReferenceFromUrl(foodImg)
-
                             vendorRef.document(vendorId).get().addOnSuccessListener { vendorRes ->
                                 val cateringPrice = vendorRes.getLong("catering_price") ?: 0
                                 totalPrice = vendorRes.getLong("catering_price")?:0
@@ -323,7 +325,8 @@ class OrderDetail : AppCompatActivity() {
                                         foodName = foodName,
                                         foodPrice = cateringPrice,
                                         foodPictUrl = foodImgRef,
-                                        foodQty = 1
+                                        foodQty = 1,
+                                        foodDiscount = 1.0
                                     )
                                 )
 

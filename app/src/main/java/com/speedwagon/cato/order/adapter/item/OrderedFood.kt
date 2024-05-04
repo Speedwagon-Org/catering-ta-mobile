@@ -8,4 +8,5 @@ data class OrderedFood(
     val foodPrice: Long,
     val foodPictUrl: StorageReference,
     val foodQty: Long,
+    val foodDiscount : Double
 )
