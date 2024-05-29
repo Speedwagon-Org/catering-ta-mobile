@@ -289,6 +289,7 @@ class Home : Fragment() {
         for (vendor in vendors) {
             val id = vendor["id"] as String
             val name = (vendor["data"] as Map<*, *>)["name"] as String
+            val isVerified = (vendor["data"] as Map<*,*>) ["isVerified"] as Long
             val img = (vendor["data"] as Map<*, *>)["profile_picture"] as String
             val vendorLat = ((vendor["data"] as Map<*, *>)["location"] as GeoPoint).latitude
             val vendorLng = ((vendor["data"] as Map<*, *>)["location"] as GeoPoint).longitude
@@ -309,7 +310,7 @@ class Home : Fragment() {
                                         val customerLng = userLocationRes.getGeoPoint("location")!!.longitude
                                         val distance = vincentyDistance(lat1 = customerLat, lat2 = vendorLat, lon1 = customerLng, lon2 = vendorLng)
 
-                                        if (distance <= 15.0) {
+                                        if (distance <= 15.0 && isVerified == 1L) {
                                             dataNearVendor.add(
                                                 NearVendor(
                                                     vendorId = id,

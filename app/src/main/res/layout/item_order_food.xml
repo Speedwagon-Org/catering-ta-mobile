@@ -42,7 +42,7 @@
         android:id="@+id/tv_item_order_detail_food_qty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:text="2x"
         tools:ignore="HardcodedText" />
 </LinearLayout>

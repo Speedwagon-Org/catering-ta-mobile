@@ -71,6 +71,7 @@ class KateringFragment : Fragment() {
             val id = vendor["id"] as String
             val name = (vendor["data"] as Map<*,*>) ["name"] as String
             val img =(vendor["data"] as Map<*,*>) ["profile_picture"] as String
+            val isVerified = (vendor["data"] as Map<*,*>) ["isVerified"] as Long
             val isAvailableCatering =(vendor["data"] as Map<*,*>) ["catering_is_available"] as Boolean
             val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(img)
             val vendorLat = ((vendor["data"] as Map<*, *>)["location"] as GeoPoint).latitude
@@ -99,7 +100,7 @@ class KateringFragment : Fragment() {
                                                 lon2 = vendorLng
                                             )
 
-                                            if (distance <= 15.0 && isAvailableCatering) {
+                                            if (distance <= 15.0 && isAvailableCatering && isVerified == 1L) {
                                                 dataVendor.add(
                                                     Vendor(
                                                         id = id,

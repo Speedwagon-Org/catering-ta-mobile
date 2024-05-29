@@ -72,6 +72,7 @@ class PesanAntarFragment : Fragment() {
         for (vendor in vendors){
             val id = vendor["id"] as String
             val name = (vendor["data"] as Map<*,*>) ["name"] as String
+            val isVerified = (vendor["data"] as Map<*,*>) ["isVerified"] as Long
             val img =(vendor["data"] as Map<*,*>) ["profile_picture"] as String
             val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(img)
             val vendorLat = ((vendor["data"] as Map<*, *>)["location"] as GeoPoint).latitude
@@ -99,7 +100,8 @@ class PesanAntarFragment : Fragment() {
                                                 lon2 = vendorLng
                                             )
 
-                                            if (distance <= 15.0) {
+                                            println("Vendor Id $id : $distance [$vendorLat, $vendorLng]")
+                                            if (distance <= 15.0 && isVerified == 1L) {
                                                 dataVendor.add(
                                                     Vendor(
                                                         id = id,
@@ -195,16 +197,20 @@ class PesanAntarFragment : Fragment() {
                         (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
                         (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)),
                 sinU1 * sinU2 + cosU1 * cosU2 * cosLambda)
+
             val sinAlpha = cosU1 * cosU2 * sinLambda / sin(sigma)
             cosSqAlpha = 1 - sinAlpha * sinAlpha
             cos2SigmaM = cos(sigma) - 2 * sinU1 * sinU2 / cosSqAlpha
+
             val cC = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
             val lambdaP = lambda
             lambda = lL + (1 - cC) * f * sinAlpha *
                     (sigma + cC * sin(sigma) *
                             (cos2SigmaM + cC * cos(sigma) *
                                     (-1 + 2 * cos2SigmaM * cos2SigmaM)))
-        } while (abs(lambda - lambdaP) > 1e-12 && ++iter < MAX_ITERATIONS)
+
+            iter++
+        } while (abs(lambda - lambdaP) > 1e-12 && iter < MAX_ITERATIONS)
 
         if (iter >= MAX_ITERATIONS) {
             throw RuntimeException("Formula failed to converge")
@@ -223,5 +229,6 @@ class PesanAntarFragment : Fragment() {
 
         return s / 1000 // Convert meters to kilometers
     }
+
 
 }

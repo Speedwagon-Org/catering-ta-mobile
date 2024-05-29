@@ -42,8 +42,8 @@ class OrderFoodAdapter(private val context: Context, private val itemList: List<
         } else {
             holder.foodQtyTextView.visibility = View.VISIBLE
             holder.foodPriceTextView.visibility = View.VISIBLE
+            holder.foodQtyTextView.text =  CurrencyConverter.intToIDR(currentItem.foodPrice/currentItem.foodQty) + " x " + currentItem.foodQty.toString()
         }
-        holder.foodQtyTextView.text = currentItem.foodQty.toString() + "x"
         holder.foodNameTextView.text = currentItem.foodName
         holder.foodPriceTextView.text = CurrencyConverter.intToIDR(currentItem.foodPrice)
 
