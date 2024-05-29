@@ -99,6 +99,7 @@ class KateringFragment : Fragment() {
                                                 lon1 = customerLng,
                                                 lon2 = vendorLng
                                             )
+                                            println("Loading Katering")
 
                                             if (distance <= 15.0 && isAvailableCatering && isVerified == 1L) {
                                                 dataVendor.add(
@@ -131,7 +132,7 @@ class KateringFragment : Fragment() {
                                 dataVendor.add(
                                     Vendor(
                                         id = id,
-                                        name = name,
+                                        name = name + "Catering",
                                         distance = distance,
                                         imgUrl = storageReference
                                     )

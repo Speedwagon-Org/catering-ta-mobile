@@ -102,6 +102,8 @@ class PesanAntarFragment : Fragment() {
 
                                             println("Vendor Id $id : $distance [$vendorLat, $vendorLng]")
                                             if (distance <= 15.0 && isVerified == 1L) {
+                                                println("Loading Pesan Antar")
+
                                                 dataVendor.add(
                                                     Vendor(
                                                         id = id,

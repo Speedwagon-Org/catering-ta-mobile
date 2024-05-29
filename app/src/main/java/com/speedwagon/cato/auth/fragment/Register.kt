@@ -47,19 +47,23 @@ class Register : Fragment() {
         return view
     }
 
-    private fun registerUser(){
+    private fun registerUser() {
         val username = userUsername.editableText.toString()
         val phoneNumber = userPhone.editableText.toString()
         val password = userPassword.editableText.toString()
         val email = userEmail.editableText.toString()
 
-        if (username.isEmpty() || phoneNumber.isEmpty() || password.isEmpty() || email.isEmpty()){
-            Toast.makeText(context, "Seperti nya ada yang belum kamu isih deh, coba cek lagi ya!", Toast.LENGTH_SHORT).show()
-            if (username.isEmpty()){
+        if (username.isEmpty() || phoneNumber.isEmpty() || password.isEmpty() || email.isEmpty()) {
+            Toast.makeText(
+                context,
+                "Seperti nya ada yang belum kamu isih deh, coba cek lagi ya!",
+                Toast.LENGTH_SHORT
+            ).show()
+            if (username.isEmpty()) {
                 userUsername.requestFocus()
-            } else if (phoneNumber.isEmpty()){
+            } else if (phoneNumber.isEmpty()) {
                 userPhone.requestFocus()
-            } else if (email.isEmpty()){
+            } else if (email.isEmpty()) {
                 userEmail.requestFocus()
             } else {
                 userPassword.requestFocus()
@@ -72,23 +76,6 @@ class Register : Fragment() {
             intent.putExtra("password", password)
             startActivity(intent)
             requireActivity().finish()
-//            val registrationManager = RegistrationManager()
-//
-//            registrationManager.registerWithEmailAndPassword(email, username, phoneNumber, password) { isSuccess, eMessage ->
-//                if (isSuccess){
-//                    Toast.makeText(context, "Pendaftaran berhasil!", Toast.LENGTH_SHORT).show()
-//                    redirectHome()
-//                } else {
-//                    Toast.makeText(context, "Gagal mendaftarkan akun", Toast.LENGTH_SHORT).show()
-//                    Log.e("Registration", "Error: $eMessage")
-//                }
-//            }
         }
     }
-
-//    private fun redirectHome(){
-//        val intent = Intent(activity, HomeNavigation::class.java)
-//        startActivity(intent)
-//        requireActivity().finish()
-//    }
 }

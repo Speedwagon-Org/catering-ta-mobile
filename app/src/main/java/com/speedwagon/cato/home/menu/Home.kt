@@ -369,29 +369,33 @@ class Home : Fragment() {
             val foodName = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["name"] as String
             val foodStatus = (order["order"] as Map<*, *>)["status"] as String
             val vendorId = (order["order"] as Map<*, *>)["vendor"] as String
+            val customerId = (order["order"] as Map<*, *>)["customer"] as String
             val orderType = (order["order"] as Map<*, *>)["order_type"] as Long
             val foodImgPath = (((order["foods"] as ArrayList<*>)[0] as Map<*, *>)["food"] as Map<*, *>)["photo"] as String
             val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(foodImgPath)
-            val dayLeft = if (orderType==1L) {
+            val dayLeft = if (orderType==1L && (foodStatus != "canceled" && foodStatus != "adm cancel" && foodStatus != "delivered")) {
                 (order["order"] as Map<*, *>)["order_day_left"] as Long
-            } else {
+            }
+            else {
                 null
             }
             val vendorName = withContext(Dispatchers.IO) {
                 getVendor(vendorId)
             }
-
-            dataOnProcessOrders.add(
-                OnProcessItem(
-                    orderId = id,
-                    foodName = foodName,
-                    foodStatus = foodStatus,
-                    foodImgUrl = storageReference,
-                    vendorName = vendorName,
-                    orderType = orderType,
-                    orderDayLeft = dayLeft
+            if (customerId == auth.currentUser?.uid && foodStatus != "canceled" && foodStatus != "adm cancel" && foodStatus != "delivered"){
+                dataOnProcessOrders.add(
+                    OnProcessItem(
+                        orderId = id,
+                        foodName = foodName,
+                        foodStatus = foodStatus,
+                        foodImgUrl = storageReference,
+                        vendorName = vendorName,
+                        orderType = orderType,
+                        orderDayLeft = dayLeft
+                    )
                 )
-            )
+            }
+
         }
 
         rvOnProcessItem.adapter = OnProcessAdapter(requireContext(), dataOnProcessOrders)

@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.speedwagon.cato.R
+import com.speedwagon.cato.home.HomeNavigation
 import com.speedwagon.cato.home.menu.profile.location.adapter.LocationItem
 import java.io.IOException
 import java.util.Locale
@@ -141,9 +142,16 @@ class DetailLocation : AppCompatActivity() {
                         .setNegativeButton("Tidak", null)
                         .show()
                 } else {
-                    val intent = Intent()
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
+                    val firstTime = intent.getBooleanExtra("first_time", false)
+                    if (firstTime){
+                        val intent = Intent(this, HomeNavigation::class.java)
+                        startActivity(intent)
+                    } else{
+                        val intent = Intent()
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    }
+
                 }
             }
 

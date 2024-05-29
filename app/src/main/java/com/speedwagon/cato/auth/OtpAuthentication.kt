@@ -14,7 +14,7 @@ import com.speedwagon.cato.helper.api.otp.OtpRequest
 import com.speedwagon.cato.helper.api.otp.OtpResponse
 import com.speedwagon.cato.helper.api.otp.OtpVerifyRequest
 import com.speedwagon.cato.helper.api.otp.OtpVerifyResponse
-import com.speedwagon.cato.home.HomeNavigation
+import com.speedwagon.cato.home.menu.profile.location.DetailLocation
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -93,7 +93,7 @@ class OtpAuthentication : AppCompatActivity() {
                                 val registrationManager = RegistrationManager()
                                 registrationManager.registerWithEmailAndPassword(email, username, phone, password) { isSuccess, eMessage ->
                                     if (isSuccess){
-                                        redirectHome()
+                                        redirectAddLocation()
                                     } else {
                                         println("Registration Error: $eMessage")
                                     }
@@ -129,8 +129,9 @@ class OtpAuthentication : AppCompatActivity() {
             .build()
     }
 
-    private fun redirectHome(){
-        val intent = Intent(this, HomeNavigation::class.java)
+    private fun redirectAddLocation(){
+        val intent = Intent(this, DetailLocation::class.java)
+        intent.putExtra("first_time", true)
         startActivity(intent)
         finish()
     }
