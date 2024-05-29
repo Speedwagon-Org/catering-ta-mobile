@@ -2,7 +2,6 @@ package com.speedwagon.cato.auth.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.speedwagon.cato.R
-import com.speedwagon.cato.helper.RegistrationManager
-import com.speedwagon.cato.home.HomeNavigation
+import com.speedwagon.cato.auth.OtpAuthentication
 
 class Register : Fragment() {
 
@@ -67,22 +65,30 @@ class Register : Fragment() {
                 userPassword.requestFocus()
             }
         } else {
-            val registrationManager = RegistrationManager()
-            registrationManager.registerWithEmailAndPassword(email, username, phoneNumber, password) { isSuccess, eMessage ->
-                if (isSuccess){
-                    Toast.makeText(context, "Pendaftaran berhasil!", Toast.LENGTH_SHORT).show()
-                    redirectHome()
-                } else {
-                    Toast.makeText(context, "Gagal mendaftarkan akun", Toast.LENGTH_SHORT).show()
-                    Log.e("Registration", "Error: $eMessage")
-                }
-            }
+            val intent = Intent(activity, OtpAuthentication::class.java)
+            intent.putExtra("email", email)
+            intent.putExtra("username", username)
+            intent.putExtra("phone", phoneNumber)
+            intent.putExtra("password", password)
+            startActivity(intent)
+            requireActivity().finish()
+//            val registrationManager = RegistrationManager()
+//
+//            registrationManager.registerWithEmailAndPassword(email, username, phoneNumber, password) { isSuccess, eMessage ->
+//                if (isSuccess){
+//                    Toast.makeText(context, "Pendaftaran berhasil!", Toast.LENGTH_SHORT).show()
+//                    redirectHome()
+//                } else {
+//                    Toast.makeText(context, "Gagal mendaftarkan akun", Toast.LENGTH_SHORT).show()
+//                    Log.e("Registration", "Error: $eMessage")
+//                }
+//            }
         }
     }
 
-    private fun redirectHome(){
-        val intent = Intent(activity, HomeNavigation::class.java)
-        startActivity(intent)
-        requireActivity().finish()
-    }
+//    private fun redirectHome(){
+//        val intent = Intent(activity, HomeNavigation::class.java)
+//        startActivity(intent)
+//        requireActivity().finish()
+//    }
 }
