@@ -73,4 +73,7 @@ dependencies {
     implementation ("org.osmdroid:osmdroid-android:6.1.14")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    // Midtrans
+    implementation ("com.midtrans:uikit:2.0.0-SANDBOX")
+
 }
