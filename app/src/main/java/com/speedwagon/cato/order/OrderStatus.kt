@@ -226,16 +226,20 @@ class OrderStatus : AppCompatActivity() {
                             }
                         }
                         btnInsertCts.setOnClickListener {
-                            showCtsInsertDialog(this) {ctsCode ->
-                                if (ctsCode == orderCtsCode){
+                            showCtsInsertDialog(this) { ctsCode ->
+                                if (ctsCode == orderCtsCode) {
                                     val newStatus = "delivered"
                                     orderRef.document(orderId).update("status", newStatus)
                                         .addOnSuccessListener {
+                                            val vendorId = res.getString("vendor")
+                                            if (vendorId != null) {
+                                                decreaseVendorStock(vendorId, orderId)
+                                            }
                                             Toast.makeText(this, "Yey! pesananmu telah selesai", Toast.LENGTH_SHORT).show()
                                             restartActivity()
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.e(TAG, "Error updating document" , e)
+                                            Log.e(TAG, "Error updating document", e)
                                             Toast.makeText(this, "Failed to update status", Toast.LENGTH_SHORT).show()
                                         }
                                 } else {
@@ -299,10 +303,47 @@ class OrderStatus : AppCompatActivity() {
 
         dialog.show()
     }
+
     private fun restartActivity() {
         val intent = intent
         finish()
         startActivity(intent)
     }
+    private fun decreaseVendorStock(vendorId: String, orderId: String) {
+        val orderFoodsRef = db.collection("orders").document(orderId).collection("foods")
+        val vendorFoodsRef = db.collection("vendor").document(vendorId).collection("foods")
 
+        orderFoodsRef.get().addOnSuccessListener { orderFoodsSnapshot ->
+            if (!orderFoodsSnapshot.isEmpty) {
+                for (orderFood in orderFoodsSnapshot) {
+                    val orderedFoodName = orderFood.getString("name")?.capitalize()
+                    val quantityOrdered = orderFood.getLong("quantity") ?: 0L
+
+                    vendorFoodsRef.whereEqualTo("name", orderedFoodName).get().addOnSuccessListener { vendorFoodsSnapshot ->
+                        if (!vendorFoodsSnapshot.isEmpty) {
+                            val vendorFood = vendorFoodsSnapshot.documents[0]
+                            val currentStock = vendorFood.getLong("stock") ?: 0L
+                            Log.d(TAG, "newstck: $currentStock - $quantityOrdered")
+                            val newStock = currentStock - quantityOrdered
+                            if (newStock >= 0) {
+                                vendorFoodsRef.document(vendorFood.id).update("stock", newStock)
+                                    .addOnSuccessListener {
+                                        Log.d(TAG, "Stock updated for foodName: $orderedFoodName")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e(TAG, "Error updating stock for foodName: $orderedFoodName", e)
+                                    }
+                            } else {
+                                Log.e(TAG, "Not enough stock for foodName: $orderedFoodName")
+                            }
+                        }
+                    }.addOnFailureListener { e ->
+                        Log.e(TAG, "Error getting vendor food", e)
+                    }
+                }
+            }
+        }.addOnFailureListener { e ->
+            Log.e(TAG, "Error getting ordered foods", e)
+        }
+    }
 }

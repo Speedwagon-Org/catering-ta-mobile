@@ -8,15 +8,38 @@
     tools:context=".payment.Payment">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Kirim uang ke nomor pembayaran dibawah ini :"
         android:textAlignment="center"
-        android:text="Payment In Progress\n(WIP)"
+        app:layout_constraintBottom_toTopOf="@+id/tv_payment_noRek"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_payment_noRek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(BCA)\n123456789"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_payment_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Bukti Pembayaran"
+        app:layout_constraintBottom_toTopOf="@+id/btn_payment_debug_finish"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_payment_noRek"
+        app:layout_constraintVertical_bias="0.19" />
 
     <Button
         android:id="@+id/btn_payment_debug_finish"
@@ -27,6 +50,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_payment_noRek"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
